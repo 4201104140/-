@@ -264,6 +264,15 @@ namespace Microsoft.IO
             return block;
         }
 
+        /// <summary>
+        /// Returns a buffer of arbitrary size from the large buffer pool. This buffer
+        /// will be at least the requiredSize and always be a multiple/exponential of largeBufferMultiple.
+        /// </summary>
+        /// <param name="requiredSize">The minimum length of the buffer</param>
+        /// <param name="id">Unique ID for the stream</param>
+        /// <param name="tag">The tag of the stream returning this buffer, for logging if necessary.</param>
+        /// <returns>A buffer of at least the required size.</returns>
+        /// <exception cref="System.OutOfMemoryException">Requested array size is larger than the maximum allowed.</exception>
         internal byte[] GetLargeBuffer(long requiredSize, Guid id, string tag)
         {
             if (requiredSize > MaxArrayLength)
@@ -273,7 +282,51 @@ namespace Microsoft.IO
 
             requiredSize = this.RoundToLargeBufferSize(requiredSize);
 
-            return new byte[2];
+            var poolIndex = this.GetPoolIndex(requiredSize);
+
+            bool createdNew = false;
+            bool pooled = true;
+            string callStack = null;
+
+            byte[] buffer;
+            if (poolIndex < this.largePools.Length)
+            {
+                if (!this.largePools[poolIndex].TryPop(out buffer))
+                {
+                    buffer = new byte[requiredSize];
+                    createdNew = true;
+                }
+                else
+                {
+                    Interlocked.Add(ref this.largeBufferFreeSize[poolIndex], -buffer.Length);
+                }
+            }
+            else
+            {
+                // Buffer is too large to pool. They get a new buffer.
+
+                // We still want to track the size, though, and we've reserved a slot
+                // in the end of the inuse array for nonpooled bytes in use.
+                poolIndex = this.largeBufferInUseSize.Length - 1;
+
+                // We still want to round up to reduce heap fragmentation.
+                buffer = new byte[requiredSize];
+                if (this.GenerateCallStacks)
+                {
+                    // Grab the stack -- we want to know who requires such large buffers
+                    callStack = Environment.StackTrace;
+                }
+                createdNew = true;
+                pooled = false;
+            }
+
+            Interlocked.Add(ref this.largeBufferInUseSize[poolIndex], buffer.Length);
+            if (createdNew)
+            {
+                ReportLargeBufferCreated(id, tag, requiredSize, pooled: pooled, callStack);
+            }
+
+            return buffer;
         }
 
         private long RoundToLargeBufferSize(long requiredSize)
@@ -415,6 +468,19 @@ namespace Microsoft.IO
 
         }
 
+        internal void ReportLargeBufferCreated(Guid id, string tag, long requiredSize, bool pooled, string callStack)
+        {
+            if (pooled)
+            {
+                Events.Writer.MemoryStreamNewLargeBufferCreated(requiredSize, this.LargePoolInUseSize);
+            }
+            else
+            {
+                Events.Writer.MemoryStreamNonPooledLargeBufferCreated(id, tag, requiredSize, callStack);
+            }
+            this.LargeBufferCreated?.Invoke(this, new LargeBufferCreatedEventArgs(id, tag, requiredSize, this.LargePoolInUseSize, pooled, callStack));
+        }
+
         internal void ReportBufferDiscarded(Guid id, string tag, Events.MemoryStreamBufferType bufferType, Events.MemoryStreamDiscardReason reason)
         {
             Events.Writer.MemoryStreamDiscardBuffer(id, tag, bufferType, reason);
@@ -460,6 +526,111 @@ namespace Microsoft.IO
         {
             this.UsageReport?.Invoke(this, new UsageReportEventArgs(smallPoolInUseBytes, smallPoolFreeBytes, largePoolInUseBytes, largePoolFreeBytes));
         }
+
+        /// <summary>
+        /// Retrieve a new <c>MemoryStream</c> object with no tag and a default initial capacity.
+        /// </summary>
+        /// <returns>A <c>MemoryStream</c>.</returns>
+        public MemoryStream GetStream()
+        {
+            return new RecyclableMemoryStream(this);
+        }
+
+        /// <summary>
+        /// Retrieve a new <c>MemoryStream</c> object with no tag and a default initial capacity.
+        /// </summary>
+        /// <param name="id">A unique identifier which can be used to trace usages of the stream.</param>
+        /// <returns>A <c>MemoryStream</c>.</returns>
+        public MemoryStream GetStream(Guid id)
+        {
+            return new RecyclableMemoryStream(this, id);
+        }
+
+        /// <summary>
+        /// Retrieve a new <c>MemoryStream</c> object with the given tag and a default initial capacity.
+        /// </summary>
+        /// <param name="tag">A tag which can be used to track the source of the stream.</param>
+        /// <returns>A <c>MemoryStream</c>.</returns>
+        public MemoryStream GetStream(string tag)
+        {
+            return new RecyclableMemoryStream(this, tag);
+        }
+
+        /// <summary>
+        /// Retrieve a new <c>MemoryStream</c> object with the given tag and a default initial capacity.
+        /// </summary>
+        /// <param name="id">A unique identifier which can be used to trace usages of the stream.</param>
+        /// <param name="tag">A tag which can be used to track the source of the stream.</param>
+        /// <returns>A <c>MemoryStream</c>.</returns>
+        public MemoryStream GetStream(Guid id, string tag)
+        {
+            return new RecyclableMemoryStream(this, id, tag);
+        }
+
+        /// <summary>
+        /// Retrieve a new <c>MemoryStream</c> object with the given tag and at least the given capacity.
+        /// </summary>
+        /// <param name="tag">A tag which can be used to track the source of the stream.</param>
+        /// <param name="requiredSize">The minimum desired capacity for the stream.</param>
+        /// <returns>A <c>MemoryStream</c>.</returns>
+        public MemoryStream GetStream(string tag, int requiredSize)
+        {
+            return new RecyclableMemoryStream(this, tag, requiredSize);
+        }
+
+        /// <summary>
+        /// Retrieve a new <c>MemoryStream</c> object with the given tag and at least the given capacity.
+        /// </summary>
+        /// <param name="id">A unique identifier which can be used to trace usages of the stream.</param>
+        /// <param name="tag">A tag which can be used to track the source of the stream.</param>
+        /// <param name="requiredSize">The minimum desired capacity for the stream.</param>
+        /// <returns>A <c>MemoryStream</c>.</returns>
+        public MemoryStream GetStream(Guid id, string tag, int requiredSize)
+        {
+            return new RecyclableMemoryStream(this, id, tag, requiredSize);
+        }
+
+        /// <summary>
+        /// Retrieve a new <c>MemoryStream</c> object with the given tag and at least the given capacity, possibly using
+        /// a single contiguous underlying buffer.
+        /// </summary>
+        /// <remarks>Retrieving a <c>MemoryStream</c> which provides a single contiguous buffer can be useful in situations
+        /// where the initial size is known and it is desirable to avoid copying data between the smaller underlying
+        /// buffers to a single large one. This is most helpful when you know that you will always call <see cref="RecyclableMemoryStream.GetBuffer"/> 
+        /// on the underlying stream.</remarks>
+        /// <param name="id">A unique identifier which can be used to trace usages of the stream.</param>
+        /// <param name="tag">A tag which can be used to track the source of the stream.</param>
+        /// <param name="requiredSize">The minimum desired capacity for the stream.</param>
+        /// <param name="asContiguousBuffer">Whether to attempt to use a single contiguous buffer.</param>
+        /// <returns>A <c>MemoryStream</c>.</returns>
+        public MemoryStream GetStream(Guid id, string tag, int requiredSize, bool asContiguousBuffer)
+        {
+            if (!asContiguousBuffer || requiredSize <= this.BlockSize)
+            {
+                return this.GetStream(id, tag, requiredSize);
+            }
+
+            return new RecyclableMemoryStream(this, id, tag, requiredSize, this.GetLargeBuffer(requiredSize, id, tag));
+        }
+
+        /// <summary>
+        /// Retrieve a new <c>MemoryStream</c> object with the given tag and at least the given capacity, possibly using
+        /// a single contiguous underlying buffer.
+        /// </summary>
+        /// <remarks>Retrieving a MemoryStream which provides a single contiguous buffer can be useful in situations
+        /// where the initial size is known and it is desirable to avoid copying data between the smaller underlying
+        /// buffers to a single large one. This is most helpful when you know that you will always call <see cref="RecyclableMemoryStream.GetBuffer"/> 
+        /// on the underlying stream.</remarks>
+        /// <param name="tag">A tag which can be used to track the source of the stream.</param>
+        /// <param name="requiredSize">The minimum desired capacity for the stream.</param>
+        /// <param name="asContiguousBuffer">Whether to attempt to use a single contiguous buffer.</param>
+        /// <returns>A <c>MemoryStream</c>.</returns>
+        public MemoryStream GetStream(string tag, int requiredSize, bool asContiguousBuffer)
+        {
+            return GetStream(Guid.NewGuid(), tag, requiredSize, asContiguousBuffer);
+        }
+
+
 
 #if NETCOREAPP2_1 || NETSTANDARD2_1
         
