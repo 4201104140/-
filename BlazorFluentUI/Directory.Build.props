@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project>
+
+  <PropertyGroup>
+    <Authors>PhnTnTai</Authors>
+    <Owners>PhnTnTai</Owners>
+    <Product>BlazorFluentUI</Product>
+    <RepositoryUrl>https://github.com/4201104140/BlazorFluentUI</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/4201104140/BlazorFluentUI</PackageProjectUrl>
+    <Copyright>Copyright BlazorFluentUI 2019</Copyright>
+    <PackageTags>Blazor;Fluent UI;Fluent;controls;components</PackageTags>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <IsPackable>true</IsPackable>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <PackageOutputPath>../../packages</PackageOutputPath>
+    <Version>0.0.1</Version>
+
+
+  </PropertyGroup>
+</Project>

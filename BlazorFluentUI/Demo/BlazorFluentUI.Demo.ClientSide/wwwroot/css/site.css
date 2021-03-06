@@ -1,0 +1,7 @@
+﻿.iconExample {
+    font-size: 50px;
+}
+
+    .iconExample.red {
+        color: red;
+    }

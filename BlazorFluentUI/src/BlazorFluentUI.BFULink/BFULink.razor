@@ -1,0 +1,8 @@
+﻿@namespace BlazorFluentUI
+
+@if ((Type !=null && Type == LinkType.Anchor) || (Type == null && !string.IsNullOrWhiteSpace(Href)))
+{
+    <a href=@(Disabled ? "" : Href) target=@Target class="">
+
+    </a>
+}
