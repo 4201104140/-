@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 
 namespace BlazorFluentUI
 {
-    /**
-     * This adds accessibility to Dialog and Panel controls
+    /**	
+     * This adds accessibility to Dialog and Panel controls	
      */
     public partial class BFUPopup : BFUComponentBase, IDisposable
     {
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter] public string Role { get; set; }
-        //[Parameter] public string AriaLabel { get; set; }
-        //[Parameter] public string AriaLabelledBy { get; set; }
-        //[Parameter] public string AriaDescribedBy { get; set; }
-        [Parameter] public bool ShouldRestoreFocus { get; set; } = true;  //THIS DOES NOTHING AT THE MOMENT.  
+        //[Parameter] public string AriaLabel { get; set; }	
+        //[Parameter] public string AriaLabelledBy { get; set; }	
+        //[Parameter] public string AriaDescribedBy { get; set; }	
+        [Parameter] public bool ShouldRestoreFocus { get; set; } = true;  //THIS DOES NOTHING AT THE MOMENT.  	
 
         [Parameter] public EventCallback<EventArgs> OnDismiss { get; set; }
 
 
-        // Come back to this later if needed!
-        // Line needed on razor page:
-        // style=@("overflowY: {(needsVerticalScrollBar ? "scroll" : "hidden")}; outline: none")
+        // Come back to this later if needed!	
+        // Line needed on razor page:	
+        // style=@("overflowY: {(needsVerticalScrollBar ? "scroll" : "hidden")}; outline: none")	
         private bool needsVerticalScrollBar = false;
 
         private string _handleToLastFocusedElement;
@@ -51,7 +51,7 @@ namespace BlazorFluentUI
                     break;
             }
 
-            //return Task.CompletedTask;
+            //return Task.CompletedTask;	
         }
 
         public async void Dispose()

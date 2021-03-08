@@ -4,7 +4,6 @@
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>BlazorFluentUI.BFUTheme</AssemblyName>
     <RootNamespace>BlazorFluentUI</RootNamespace>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

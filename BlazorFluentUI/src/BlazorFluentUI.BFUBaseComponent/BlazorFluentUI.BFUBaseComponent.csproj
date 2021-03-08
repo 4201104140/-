@@ -30,6 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BlazorFluentUI.BFUTheme\BlazorFluentUI.BFUTheme.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="wwwroot\baseComponent.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

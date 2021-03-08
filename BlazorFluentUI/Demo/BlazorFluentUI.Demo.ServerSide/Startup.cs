@@ -48,7 +48,7 @@ namespace BlazorFluentUI.Demo.ServerSide
                     };
                 });
             }
-            services.AddBlazorFluentUI();
+            //services.AddBlazorFluentUI();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
