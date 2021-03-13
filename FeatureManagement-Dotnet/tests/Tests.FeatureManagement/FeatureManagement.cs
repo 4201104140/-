@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
-using Microsoft.FeatureManagement.FeatureFilters;
+//using Microsoft.FeatureManagement.FeatureFilters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,39 +36,36 @@ namespace Tests.FeatureManagement
 
             services
                 .AddSingleton(config)
-                .AddFeatureManagement()
-                .AddFeatureFilter<TestFilter>();
+                .AddFeatureManagement();
 
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
             IFeatureManager featureManager = serviceProvider.GetRequiredService<IFeatureManager>();
 
-            Assert.True(await featureManager.IsEnabledAsync(OnFeature));
+            Assert.False(await featureManager.IsEnabledAsync(OnFeature));
+        }
 
-            Assert.False(await featureManager.IsEnabledAsync(OffFeature));
 
-            IEnumerable<IFeatureFilterMetadata> featureFilters = serviceProvider.GetRequiredService<IEnumerable<IFeatureFilterMetadata>>();
 
-            //
-            // Sync filter
-            TestFilter testFeatureFilter = (TestFilter)featureFilters.First(f => f is TestFilter);
 
-            bool called = false;
-
-            testFeatureFilter.Callback = (evaluationContext) =>
+        [Fact]
+        public async Task CustomFeatureDefinitionProvider()
+        {
+            FeatureDefinition testFeature = new FeatureDefinition
             {
-                called = true;
-
-                Assert.Equal("V1", evaluationContext.Parameters["P1"]);
-
-                Assert.Equal(ConditionalFeature, evaluationContext.FeatureName);
-
-                return true;
+                Name = ConditionalFeature
             };
 
-            await featureManager.IsEnabledAsync(ConditionalFeature);
+            var services = new ServiceCollection();
 
-            Assert.True(called);
+            services.AddSingleton<IFeatureDefinitionProvider>(new InMemoryFeatureDefinitionProvider(new FeatureDefinition[] { testFeature }))
+                .AddFeatureManagement();
+
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            IFeatureManager featureManager = serviceProvider.GetRequiredService<IFeatureManager>();
+
+
         }
     }
 }
