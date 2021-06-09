@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
-using Microsoft.FeatureManagement.FeatureFilters;
+//using Microsoft.FeatureManagement.FeatureFilters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,47 +28,29 @@ namespace Tests.FeatureManagement
         private const string ContextualFeature = "ContextualFeature";
 
         [Fact]
-        public async Task ReadsConfiguration()
+        public async Task CustomFeatureDefinitionProvider()
         {
-            IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            FeatureDefinition testFeature = new FeatureDefinition
+            {
+                Name = ConditionalFeature,
+                EnabledFor = new List<FeatureFilterConfiguration>()
+                {
+                    new FeatureFilterConfiguration
+                    {
+                        Name = "Test",
+                        Parameters = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>()
+                        {
+                            { "P1","V1" },
+                        }).Build()
+                    }
+                }
+            };
 
             var services = new ServiceCollection();
 
-            services
-                .AddSingleton(config)
+            services.AddSingleton<IFeatureDefinitionProvider>(new InMemoryFeatureDefinitionProvider(new FeatureDefinition[] { testFeature }))
                 .AddFeatureManagement()
-                .AddFeatureFilter<TestFilter>();
 
-            ServiceProvider serviceProvider = services.BuildServiceProvider();
-
-            IFeatureManager featureManager = serviceProvider.GetRequiredService<IFeatureManager>();
-
-            Assert.True(await featureManager.IsEnabledAsync(OnFeature));
-
-            Assert.False(await featureManager.IsEnabledAsync(OffFeature));
-
-            IEnumerable<IFeatureFilterMetadata> featureFilters = serviceProvider.GetRequiredService<IEnumerable<IFeatureFilterMetadata>>();
-
-            //
-            // Sync filter
-            TestFilter testFeatureFilter = (TestFilter)featureFilters.First(f => f is TestFilter);
-
-            bool called = false;
-
-            testFeatureFilter.Callback = (evaluationContext) =>
-            {
-                called = true;
-
-                Assert.Equal("V1", evaluationContext.Parameters["P1"]);
-
-                Assert.Equal(ConditionalFeature, evaluationContext.FeatureName);
-
-                return true;
-            };
-
-            await featureManager.IsEnabledAsync(ConditionalFeature);
-
-            Assert.True(called);
         }
     }
 }

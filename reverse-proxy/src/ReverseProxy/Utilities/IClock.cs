@@ -1,11 +1,10 @@
-﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿
 
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.ReverseProxy.Utilities
+namespace Yarp.ReverseProxy.Utilities
 {
     /// <summary>
     /// Abstraction over monotonic time providers
@@ -13,6 +12,12 @@ namespace Microsoft.ReverseProxy.Utilities
     /// </summary>
     public interface IClock
     {
+        /// <summary>
+        /// Gets the current time in UTC as a <see cref="DateTimeOffset"/>.
+        /// </summary>
+        /// <returns></returns>
+        DateTimeOffset GetUtcNow();
+
         /// <summary>
         /// Gets a value that indicates the current tick count measured as milliseconds from an arbitrary reference time.
         /// The default implementation leverages <see cref="Environment.TickCount64"/>.

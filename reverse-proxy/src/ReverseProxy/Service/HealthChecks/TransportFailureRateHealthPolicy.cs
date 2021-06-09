@@ -29,7 +29,7 @@ namespace Microsoft.ReverseProxy.Service.HealthChecks
         private static readonly TimeSpan _defaultReactivationPeriod = TimeSpan.FromSeconds(60);
         private readonly IDestinationHealthUpdater _healthUpdater;
         private readonly TransportFailureRateHealthPolicyOptions _policyOptions;
-        private readonly IClock _clock;
+        //private readonly IClock _clock;
         private readonly ConditionalWeakTable<ClusterInfo, ParsedMetadataEntry<double>> _clusterFailureRateLimits = new ConditionalWeakTable<ClusterInfo, ParsedMetadataEntry<double>>();
         private readonly ConditionalWeakTable<DestinationInfo, ProxiedRequestHistory> _requestHistories = new ConditionalWeakTable<DestinationInfo, ProxiedRequestHistory>();
 
@@ -37,10 +37,10 @@ namespace Microsoft.ReverseProxy.Service.HealthChecks
 
         public TransportFailureRateHealthPolicy(
             IOptions<TransportFailureRateHealthPolicyOptions> policyOptions,
-            IClock clock,
+            //IClock clock,
             IDestinationHealthUpdater healthUpdater)
         {
-            _clock = clock ?? throw new ArgumentNullException(nameof(clock));
+            //_clock = clock ?? throw new ArgumentNullException(nameof(clock));
             _policyOptions = policyOptions?.Value ?? throw new ArgumentNullException(nameof(policyOptions));
             _healthUpdater = healthUpdater ?? throw new ArgumentNullException(nameof(healthUpdater));
         }
@@ -61,7 +61,7 @@ namespace Microsoft.ReverseProxy.Service.HealthChecks
             lock (history)
             {
                 var failureRate = history.AddNew(
-                    _clock.TickCount,
+                    0,
                     (long)_policyOptions.DetectionWindowSize.TotalMilliseconds,
                     _policyOptions.MinimalTotalCountThreshold,
                     failed);

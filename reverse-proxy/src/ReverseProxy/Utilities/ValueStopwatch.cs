@@ -1,10 +1,8 @@
-﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-
+﻿
 using System;
 using System.Diagnostics;
 
-namespace Microsoft.ReverseProxy.Utilities
+namespace Yarp.ReverseProxy.Utilities
 {
     /// <summary>
     /// Value-type replacement for <see cref="Stopwatch"/> which avoids allocations.

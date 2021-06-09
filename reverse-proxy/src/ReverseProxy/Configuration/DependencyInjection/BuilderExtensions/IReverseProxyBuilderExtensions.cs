@@ -50,7 +50,7 @@ namespace Microsoft.ReverseProxy.Configuration.DependencyInjection
             builder.Services.TryAddSingleton<IProxyHttpClientFactory, ProxyHttpClientFactory>();
             builder.Services.TryAddSingleton<ILoadBalancer, LoadBalancer>();
             builder.Services.TryAddSingleton<IRandomFactory, RandomFactory>();
-            builder.Services.AddHttpProxy();
+            //builder.Services.AddHttpProxy();
             return builder;
         }
 

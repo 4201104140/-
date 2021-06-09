@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.FeatureManagement.AspNetCore\Microsoft.FeatureManagement.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\src\Microsoft.FeatureManagement\Microsoft.FeatureManagement.csproj" />
   </ItemGroup>
 
 </Project>

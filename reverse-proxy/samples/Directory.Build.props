@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <!-- Recurse up. -->
-  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
+  <!--<Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />-->
 
   <PropertyGroup>
     <IsShipping>false</IsShipping>
