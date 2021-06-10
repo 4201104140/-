@@ -10,9 +10,9 @@ namespace Microsoft.AspNetCore.Builder
     {
         private readonly List<Action<EndpointBuilder>> _conventions;
 
-        internal ReverseProxyConventionBuilder(List<Action<EndpointBuilder>> conventions)
+        public ReverseProxyConventionBuilder(List<Action<EndpointBuilder>> conventions)
         {
-            _conventions = conventions ?? throw new ArgumentNullException(nameof(conventions));
+            _conventions = conventions;
         }
 
         /// <summary>
@@ -24,36 +24,6 @@ namespace Microsoft.AspNetCore.Builder
             _ = convention ?? throw new ArgumentNullException(nameof(convention));
 
             _conventions.Add(convention);
-        }
-
-        public ReverseProxyConventionBuilder ConfigureEndpoints(Action<IEndpointConventionBuilder> convention)
-        {
-            _ = convention ?? throw new ArgumentNullException(nameof(convention));
-
-            void Action(EndpointBuilder endpointBuilder)
-            {
-                var conventionBuilder = new EndpointBuilderConventionBuilder(endpointBuilder);
-                convention(conventionBuilder);
-            }
-
-            Add(Action);
-
-            return this;
-        }
-
-        private class EndpointBuilderConventionBuilder : IEndpointConventionBuilder
-        {
-            private readonly EndpointBuilder _endpointBuilder;
-
-            public EndpointBuilderConventionBuilder(EndpointBuilder endpointBuilder)
-            {
-                _endpointBuilder = endpointBuilder;
-            }
-
-            public void Add(Action<EndpointBuilder> convention)
-            {
-                convention(_endpointBuilder);
-            }
         }
     }
 }
