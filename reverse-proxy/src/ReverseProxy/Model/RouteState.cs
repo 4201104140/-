@@ -6,6 +6,6 @@ namespace Yarp.ReverseProxy.Model
 {
     internal sealed class RouteState
     {
-        private volatile 
+        //private volatile 
     }
 }

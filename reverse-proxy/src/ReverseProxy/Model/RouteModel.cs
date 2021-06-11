@@ -26,6 +26,6 @@ namespace Yarp.ReverseProxy.Model
 
         }
 
-        internal bool HasConfigChanged()
+        //internal bool HasConfigChanged()
     }
 }

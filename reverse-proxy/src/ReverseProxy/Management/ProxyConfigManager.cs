@@ -17,7 +17,7 @@ namespace Yarp.ReverseProxy.Management
     {
         private readonly object _syncRoot = new object();
 
-        private readonly ConcurrentDictionary<string, RouteState>
+        //private readonly ConcurrentDictionary<string, RouteState>
 
         private readonly List<Action<EndpointBuilder>> _conventions;
 
@@ -59,12 +59,12 @@ namespace Yarp.ReverseProxy.Management
             }
         }
 
-        [MemberNotNull(nameof(_endpoints)]
+        //[MemberNotNull(nameof(_endpoints)]
         private void CreateEndpoints()
         {
             var endpoints = new List<Endpoint>();
 
-            foreach ()
+            //foreach ()
         }
 
         public override IChangeToken GetChangeToken() => Volatile.Read(ref _changeToken);

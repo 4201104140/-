@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.ReverseProxy.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yarp.ReverseProxy", "src\ReverseProxy\Yarp.ReverseProxy.csproj", "{8CEA569E-7380-4C88-B586-2DDE3C86D8FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicYarpSample", "samples\BasicYarpSample\BasicYarpSample.csproj", "{A6FBEFE1-E055-47D0-85F5-BD66EFAAAF27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicYarpSample", "samples\BasicYarpSample\BasicYarpSample.csproj", "{A6FBEFE1-E055-47D0-85F5-BD66EFAAAF27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarp.ReverseProxy.Tests", "test\Yarp.ReverseProxy.Tests\Yarp.ReverseProxy.Tests.csproj", "{8A5B3793-3148-4F59-BE0F-07A37E119682}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A6FBEFE1-E055-47D0-85F5-BD66EFAAAF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6FBEFE1-E055-47D0-85F5-BD66EFAAAF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6FBEFE1-E055-47D0-85F5-BD66EFAAAF27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A5B3793-3148-4F59-BE0F-07A37E119682}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A5B3793-3148-4F59-BE0F-07A37E119682}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A5B3793-3148-4F59-BE0F-07A37E119682}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A5B3793-3148-4F59-BE0F-07A37E119682}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{D442CF80-06AA-493A-A6A4-4E1C3C83BAA9} = {967397CF-BEDE-4BC7-8438-0C78C541E6BC}
 		{8CEA569E-7380-4C88-B586-2DDE3C86D8FD} = {DBC87D14-6A31-4116-8248-851744EE8BCC}
 		{A6FBEFE1-E055-47D0-85F5-BD66EFAAAF27} = {0C17C91C-3F7A-4D65-A338-9B7FEE26DE81}
+		{8A5B3793-3148-4F59-BE0F-07A37E119682} = {967397CF-BEDE-4BC7-8438-0C78C541E6BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4C52120-FA36-4C4B-8028-272C413FBEDD}
