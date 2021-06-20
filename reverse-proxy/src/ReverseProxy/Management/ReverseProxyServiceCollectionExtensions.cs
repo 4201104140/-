@@ -38,5 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return builder;
         }
+
+        public static IReverseProxyBuilder AddTransformFactory<T>(this IReverseProxyBuilder builder) where T : class, 
     }
 }

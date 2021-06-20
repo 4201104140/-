@@ -10,11 +10,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\BlazorFluentUI.BFUCallout\BlazorFluentUI.BFUCallout.csproj" />
-    <ProjectReference Include="..\..\src\BlazorFluentUI.BFUIcon\BlazorFluentUI.BFUIcon.csproj" />
-    <ProjectReference Include="..\..\src\BlazorFluentUI.BFUList\BlazorFluentUI.BFUList.csproj" />
-    <ProjectReference Include="..\..\src\BlazorFluentUI.BFUPopup\BlazorFluentUI.BFUPopup.csproj" />
-  </ItemGroup>
-
 </Project>
