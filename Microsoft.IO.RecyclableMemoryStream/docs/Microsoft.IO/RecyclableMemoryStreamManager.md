@@ -1,5 +1,7 @@
 # RecyclableMemoryStreamManager class
 
+Manages pools of objects.
+
 ```csharp
 public sealed class RecyclableMemoryStreamManager
 ```
@@ -8,8 +10,7 @@ public sealed class RecyclableMemoryStreamManager
 
 | name | description |
 | --- | --- |
-| [RecyclableMemoryStreamManager](RecyclableMemoryStreamManager/RecyclableMemoryStreamManager.md)(…) |  |
-| [AggreessiveBufferReturn](RecyclableMemoryStreamManager/AggreessiveBufferReturn.md) { get; set; } | Whether dirty buffers can be immediately returned to the buffer pool. |
+| [RecyclableMemoryStreamManager](RecyclableMemoryStreamManager/RecyclableMemoryStreamManager.md)(…) | Initializes the memory manager with the given block requiredSize. This pool may have unbounded growth unless you modify [`MaximumFreeSmallPoolBytes`](RecyclableMemoryStreamManager/MaximumFreeSmallPoolBytes.md) and [`MaximumFreeLargePoolBytes`](RecyclableMemoryStreamManager/MaximumFreeLargePoolBytes.md). (2 constructors) |
 | [AggressiveBufferReturn](RecyclableMemoryStreamManager/AggressiveBufferReturn.md) { get; set; } | Whether dirty buffers can be immediately returned to the buffer pool. |
 | [BlockSize](RecyclableMemoryStreamManager/BlockSize.md) { get; } | The size of each block. It must be set at creation and cannot be changed. |
 | [GenerateCallStacks](RecyclableMemoryStreamManager/GenerateCallStacks.md) { get; set; } | Whether to save callstacks for stream allocations. This can help in debugging. It should NEVER be turned on generally in production. |
@@ -27,22 +28,12 @@ public sealed class RecyclableMemoryStreamManager
 | [ThrowExceptionOnToArray](RecyclableMemoryStreamManager/ThrowExceptionOnToArray.md) { get; set; } | Causes an exception to be thrown if !:RecyclableMemoryStream.ToArray is ever called. |
 | [UseExponentialLargeBuffer](RecyclableMemoryStreamManager/UseExponentialLargeBuffer.md) { get; } | Use exponential large buffer allocation strategy. It must be set at creation and cannot be changed. |
 | [UseMultipleLargeBuffer](RecyclableMemoryStreamManager/UseMultipleLargeBuffer.md) { get; } | Use multiple large buffer allocation strategy. It must be set at creation and cannot be changed. |
-| event [StreamCreated](RecyclableMemoryStreamManager/StreamCreated.md) | Triggered when a new stream is created. |
 | const [DefaultBlockSize](RecyclableMemoryStreamManager/DefaultBlockSize.md) | Default block size, in bytes |
 | const [DefaultLargeBufferMultiple](RecyclableMemoryStreamManager/DefaultLargeBufferMultiple.md) | Default large buffer multiple, in bytes |
 | const [DefaultMaximumBufferSize](RecyclableMemoryStreamManager/DefaultMaximumBufferSize.md) | Default maximum buffer size, in bytes |
-| class [BlockCreatedEventArgs](RecyclableMemoryStreamManager.BlockCreatedEventArgs.md) | Arguments for BlockCreated event |
-| class [BufferDiscardedEventArgs](RecyclableMemoryStreamManager.BufferDiscardedEventArgs.md) | Arguments for the BufferDiscarded event |
 | class [Events](RecyclableMemoryStreamManager.Events.md) | ETW events for RecyclableMemoryStream |
-| class [LargeBufferCreatedEventArgs](RecyclableMemoryStreamManager.LargeBufferCreatedEventArgs.md) | Arguments for the LargeBufferCreated events |
-| class [StreamConvertedToArrayEventArgs](RecyclableMemoryStreamManager.StreamConvertedToArrayEventArgs.md) | Arguments for the StreamConvertedToArray event |
 | class [StreamCreatedEventArgs](RecyclableMemoryStreamManager.StreamCreatedEventArgs.md) | Arguments for the StreamCreated event |
 | class [StreamDisposedEventArgs](RecyclableMemoryStreamManager.StreamDisposedEventArgs.md) | Arguments for the StreamDisposed event |
-| class [StreamDoubleDisposedEventArgs](RecyclableMemoryStreamManager.StreamDoubleDisposedEventArgs.md) | Arguments for the StreamDoubleDisposed event |
-| class [StreamFinalizedEventArgs](RecyclableMemoryStreamManager.StreamFinalizedEventArgs.md) | Arguments for the StreamFinalized event |
-| class [StreamLengthEventArgs](RecyclableMemoryStreamManager.StreamLengthEventArgs.md) | Arguments for the StreamLength event |
-| class [StreamOverCapacityEventArgs](RecyclableMemoryStreamManager.StreamOverCapacityEventArgs.md) | Arguments for the StreamOverCapacity event |
-| class [UsageReportEventArgs](RecyclableMemoryStreamManager.UsageReportEventArgs.md) | Arguments for the UsageReport event |
 
 ## See Also
 

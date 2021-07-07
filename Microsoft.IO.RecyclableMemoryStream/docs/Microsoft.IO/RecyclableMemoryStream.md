@@ -1,27 +1,25 @@
 # RecyclableMemoryStream class
 
-MemoryStream implementation that deals with pooling and managing memory streams which use potentially large buffers.
-
 ```csharp
-public sealed class RecyclableMemoryStream : MemoryStream
+public sealed class RecyclableMemoryStream : MemoryStream, IBufferWriter<byte>
 ```
 
 ## Public Members
 
 | name | description |
 | --- | --- |
+| [RecyclableMemoryStream](RecyclableMemoryStream/RecyclableMemoryStream.md)(…) | Allocate a new RecyclableMemoryStream object. (8 constructors) |
+| [Advance](RecyclableMemoryStream/Advance.md)(…) | Notifies the stream that *count* bytes were written to the buffer returned by !:Get |
 | override [Close](RecyclableMemoryStream/Close.md)() | Equivalent to `Dispose` |
+| [GetMemory](RecyclableMemoryStream/GetMemory.md)(…) |  |
+| [GetSpan](RecyclableMemoryStream/GetSpan.md)(…) |  |
 
 ## Protected Members
 
 | name | description |
 | --- | --- |
-| override [Dispose](RecyclableMemoryStream/Dispose.md)(…) |  |
+| override [Dispose](RecyclableMemoryStream/Dispose.md)(…) | Returns the memory used by this stream back to the pool. |
 | override [Finalize](RecyclableMemoryStream/Finalize.md)() | The finalizer will be called when a stream is not disposed properly. |
-
-## Remarks
-
-This class works in tandem with the [`RecyclableMemoryStreamManager`](RecyclableMemoryStreamManager.md) to supply `MemoryStream`-derived objects to callers, while avoiding these specific problems:
 
 ## See Also
 

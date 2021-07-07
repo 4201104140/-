@@ -1,8 +1,14 @@
 # RecyclableMemoryStream.Dispose method
 
+Returns the memory used by this stream back to the pool.
+
 ```csharp
 protected override void Dispose(bool disposing)
 ```
+
+| parameter | description |
+| --- | --- |
+| disposing | Whether we're disposing (true), or being called by the finalizer (false) |
 
 ## See Also
 

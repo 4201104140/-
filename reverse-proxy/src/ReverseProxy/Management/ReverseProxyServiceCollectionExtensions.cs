@@ -16,7 +16,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IReverseProxyBuilder AddReverseProxy(this IServiceCollection services)
         {
             var builder = new ReverseProxyBuilder(services);
-
+            builder
+                .AddConfigBuilder();
 
             services.AddDataProtection();
             services.AddCors();
@@ -35,10 +36,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(config));
             }
 
+            builder.Services.AddSingleton<>
 
             return builder;
         }
 
-        public static IReverseProxyBuilder AddTransformFactory<T>(this IReverseProxyBuilder builder) where T : class, 
+        //public static IReverseProxyBuilder AddTransformFactory<T>(this IReverseProxyBuilder builder) where T : class, 
     }
 }

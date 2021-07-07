@@ -11,5 +11,10 @@ namespace Yarp.ReverseProxy.Configuration
     /// </summary>
     public sealed record ClusterConfig
     {
+        /// <summary>
+        /// The Id for this cluster. This needs to be globally unique.
+        /// This field is required.
+        /// </summary>
+        public string ClusterId { get; init; } = default!;
     }
 }

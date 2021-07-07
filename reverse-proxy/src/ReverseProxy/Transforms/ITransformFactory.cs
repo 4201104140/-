@@ -5,6 +5,6 @@ namespace Yarp.ReverseProxy.Transforms.Builder
 {
     public interface ITransformFactory
     {
-        bool Validate()
+        //bool Validate()
     }
 }

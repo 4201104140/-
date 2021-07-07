@@ -1,91 +1,17 @@
-﻿// The MIT License (MIT)
-// 
-// Copyright (c) 2015-2016 Microsoft
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
+﻿
 namespace Microsoft.IO
 {
     using System;
-#if NETCOREAPP2_1 || NETSTANDARD2_1
     using System.Buffers;
-#endif
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// MemoryStream implementation that deals with pooling and managing memory streams which use potentially large
-    /// buffers.
-    /// </summary>
-    /// <remarks>
-    /// This class works in tandem with the <see cref="RecyclableMemoryStreamManager"/> to supply <c>MemoryStream</c>-derived
-    /// objects to callers, while avoiding these specific problems:
-    /// <list type="number">
-    /// <item>
-    /// <term>LOH allocations</term>
-    /// <description>Since all large buffers are pooled, they will never incur a Gen2 GC</description>
-    /// </item>
-    /// <item>
-    /// <term>Memory waste</term><description>A standard memory stream doubles its size when it runs out of room. This
-    /// leads to continual memory growth as each stream approaches the maximum allowed size.</description>
-    /// </item>
-    /// <item>
-    /// <term>Memory copying</term>
-    /// <description>Each time a <c>MemoryStream</c> grows, all the bytes are copied into new buffers.
-    /// This implementation only copies the bytes when <see cref="GetBuffer"/> is called.</description>
-    /// </item>
-    /// <item>
-    /// <term>Memory fragmentation</term>
-    /// <description>By using homogeneous buffer sizes, it ensures that blocks of memory
-    /// can be easily reused.
-    /// </description>
-    /// </item>
-    /// </list>
-    /// <para>
-    /// The stream is implemented on top of a series of uniformly-sized blocks. As the stream's length grows,
-    /// additional blocks are retrieved from the memory manager. It is these blocks that are pooled, not the stream
-    /// object itself.
-    /// </para>
-    /// <para>
-    /// The biggest wrinkle in this implementation is when <see cref="GetBuffer"/> is called. This requires a single 
-    /// contiguous buffer. If only a single block is in use, then that block is returned. If multiple blocks 
-    /// are in use, we retrieve a larger buffer from the memory manager. These large buffers are also pooled, 
-    /// split by size--they are multiples/exponentials of a chunk size (1 MB by default).
-    /// </para>
-    /// <para>
-    /// Once a large buffer is assigned to the stream the small blocks are NEVER again used for this stream. All operations take place on the 
-    /// large buffer. The large buffer can be replaced by a larger buffer from the pool as needed. All blocks and large buffers 
-    /// are maintained in the stream until the stream is disposed (unless AggressiveBufferReturn is enabled in the stream manager).
-    /// </para>
-    /// <para>
-    /// A further wrinkle is what happens when the stream is longer than the maximum allowable array length under .NET. This is allowed
-    /// when only blocks are in use, and only the Read/Write APIs are used. Once a stream grows to this size, any attempt to convert it
-    /// to a single buffer will result in an exception. Similarly, if a stream is already converted to use a single larger buffer, then
-    /// it cannot grow beyond the limits of the maximum allowable array size.
-    /// </para>
-    /// </remarks>
-    public sealed class RecyclableMemoryStream : MemoryStream
+    public sealed class RecyclableMemoryStream : MemoryStream, IBufferWriter<byte>
     {
         private static readonly byte[] emptyArray = new byte[0];
 
@@ -255,27 +181,9 @@ namespace Microsoft.IO
             this.id = id;
             this.tag = tag;
 
-            var actualRequestedSize = requestedSize;
-            if (actualRequestedSize < this.memoryManager.BlockSize)
-            {
-                actualRequestedSize = this.memoryManager.BlockSize;
-            }
+            
 
-            if (initialLargeBuffer == null)
-            {
-                this.EnsureCapacity(actualRequestedSize);
-            }
-            else
-            {
-                this.largeBuffer = initialLargeBuffer;
-            }
-
-            if (this.memoryManager.GenerateCallStacks)
-            {
-                this.AllocationStack = Environment.StackTrace;
-            }
-
-            this.memoryManager.ReportStreamCreated(this.id, this.tag, requestedSize, actualRequestedSize);
+            
         }
         #endregion
 
@@ -289,6 +197,10 @@ namespace Microsoft.IO
             this.Dispose(false);
         }
 
+        /// <summary>
+        /// Returns the memory used by this stream back to the pool.
+        /// </summary>
+        /// <param name="disposing">Whether we're disposing (true), or being called by the finalizer (false)</param>
         protected override void Dispose(bool disposing)
         {
             if (this.disposed)
@@ -299,7 +211,6 @@ namespace Microsoft.IO
                     doubleDisposeStack = Environment.StackTrace;
                 }
 
-                this.memoryManager.ReportStreamDoubleDisposed(this.id, this.tag, this.AllocationStack, this.DisposeStack, doubleDisposeStack);
                 return;
             }
 
@@ -310,16 +221,13 @@ namespace Microsoft.IO
                 this.DisposeStack = Environment.StackTrace;
             }
 
-            this.memoryManager.ReportStreamDisposed(this.id, this.tag, this.AllocationStack, this.DisposeStack);
-
             if (disposing)
             {
                 GC.SuppressFinalize(this);
             }
             else
             {
-                // We're being finalized.
-                this.memoryManager.ReportStreamFinalized(this.id, this.tag, this.AllocationStack);
+
 
                 if (AppDomain.CurrentDomain.IsFinalizingForUnload())
                 {
@@ -329,17 +237,18 @@ namespace Microsoft.IO
                     base.Dispose(disposing);
                     return;
                 }
-
             }
-
-            this.memoryManager.ReportStreamLength(this.length);
 
             if (this.largeBuffer != null)
             {
                 
             }
 
-            this.memoryManager.ReturnBlocks(this.blocks, this.id, this.tag);
+            if (this.dirtyBuffers != null)
+            {
+
+            }
+
             this.blocks.Clear();
 
             base.Dispose(disposing);
@@ -356,11 +265,57 @@ namespace Microsoft.IO
 
         #region MemoryStream overrides
 
-        private long length;
+
+        private byte[] bufferWriterTempBuffer;
+
+        /// <summary>
+        /// Notifies the stream that <paramref name="count"/> bytes were written to the buffer returned by <see cref="Get"/>
+        /// </summary>
+        /// <param name="count"></param>
+        public void Advance(int count)
+        {
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), $"{nameof(count)} must be non-negative.");
+            }
+
+            //byte[] buffer = this.buff
+        }
+
+
+        /// <inheritdoc/>
+        /// <remarks>
+        /// IMPORTANT: Calling Write(), GetBuffer(), TryGetBuffer(), Seek(), GetLength(), Advance(),
+        /// or setting Position after calling GetMemory() invalidates the memory.
+        /// </remarks>
+        public Memory<byte> GetMemory(int sizeHint = 0) => this.GetWritableBuffer(sizeHint);
+
+        /// <inheritdoc/>
+        /// <remarks>
+        /// IMPORTANT: Calling Write(), GetBuffer(), TryGetBuffer(), Seek(), GetLength(), Advance(),
+        /// or setting Position after calling GetMemory() invalidates the memory.
+        /// </remarks>
+        public Span<byte> GetSpan(int sizeHint = 0) => this.GetWritableBuffer(sizeHint);
+
+        private ArraySegment<byte> GetWritableBuffer(int minimumBufferSize)
+        {
+            this.CheckDisposed();
+            if (minimumBufferSize < 0)
+            {
+                throw new ArgumentOutOfRangeException("sizeHint", $"sizeHint must be non-negative");
+            }
+
+            if (minimumBufferSize == 0)
+            {
+                minimumBufferSize = 1;
+            }
+
+            return new ArraySegment<byte>(this.bufferWriterTempBuffer);
+        }
         #endregion
 
         #region Helper Methods
-        private bool Disposed => this.Disposed;
+        private bool Disposed => this.disposed;
 
         [MethodImpl((MethodImplOptions)256)]
         private void CheckDisposed()
@@ -377,56 +332,24 @@ namespace Microsoft.IO
             throw new ObjectDisposedException($"The stream with Id {this.id} and Tag {this.tag} is disposed.");
         }
 
-        private int InternalRead(byte[] buffer, int offset, int count, long fromPosition)
-        {
-            if (this.length - fromPosition <= 0)
-            {
-                return 0;
-            }
-
-            int amountToCopy;
-
-            if (this.largeBuffer == null)
-            {
-                
-            }
-            amountToCopy = (int)Math.Min((long)count, this.length - fromPosition);
-
-            return amountToCopy;
-        }
-
 
         private void EnsureCapacity(long newCapacity)
         {
             if (newCapacity > this.memoryManager.MaximumStreamCapacity && this.memoryManager.MaximumStreamCapacity > 0)
             {
-                this.memoryManager.ReportStreamOverCapacity(this.id, this.tag, newCapacity, this.AllocationStack);
-                throw new InvalidOperationException("Requested capacity is too large: " + newCapacity + ". Limit is " +
-                                                    this.memoryManager.MaximumStreamCapacity);
+                //this.memoryManager.
+                throw new OutOfMemoryException(
+                    "Requested capacity is too large: " + newCapacity.ToString(CultureInfo.InvariantCulture) +
+                    ". Limit is " + this.memoryManager.MaximumStreamCapacity.ToString(CultureInfo.InvariantCulture));
             }
 
             if (this.largeBuffer != null)
             {
                 if (newCapacity > this.largeBuffer.Length)
                 {
-                    var newBuffer = this.memoryManager.GetLargeBuffer(newCapacity, this.id, this.tag);
                     
                 }
             }
-        }
-
-        private void ReleaseLargeBuffer()
-        {
-            if (this.memoryManager.AggressiveBufferReturn)
-            {
-                this.memoryManager.Return
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AssertLengthIsSmall()
-        {
-            Debug.Assert(this.length <= Int32.MaxValue, "this.length was assumed to be <= Int32.MaxValue, but was larger.");
         }
         #endregion
     }

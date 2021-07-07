@@ -1,0 +1,51 @@
+﻿@page "/"
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Primitives
+@using ChangeTokenSample.Services
+
+@inject IConfiguration _config
+@inject IEnumerable<ITest> _test
+
+<div>
+    <p>Current state: <span>@CurrentState</span></p>
+    <ul>
+        <li>Default: <span>@DefaultLogLevel</span></li>
+    </ul>
+    <button @onclick="StartMonitoring">Start Monitoring</button>
+    <button @onclick="StateHasChanged">Refresh page</button>
+</div>
+
+@code {
+    private string DefaultLogLevel;
+    private bool MonitoringEnabled;
+    private string CurrentState = "Not monitoring";
+
+
+    protected override void OnInitialized()
+    {
+        MonitoringEnabled = false;
+        ChangeToken.OnChange(
+            () => _config.GetReloadToken(), InvokeChanged);
+        DefaultLogLevel = _config["Logging:LogLevel:Default"];
+        foreach (var test in _test)
+        {
+            test.ConsoleA();
+        }
+    }
+
+    protected void StartMonitoring()
+    {
+        MonitoringEnabled = true;
+        CurrentState = "Monitoring!";
+        //StateHasChanged();
+    }
+
+    private void InvokeChanged()
+    {
+        if (MonitoringEnabled)
+        {
+            Console.WriteLine("State updated");
+            DefaultLogLevel = _config["Logging:LogLevel:Default"];
+        }
+    }
+}
