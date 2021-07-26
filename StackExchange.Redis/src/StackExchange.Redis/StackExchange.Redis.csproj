@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Description>High performance Redis client, incorporating both synchronous and asynchronous usage.</Description>
+    <AssemblyName>StackExchange.Redis</AssemblyName>
+    <AssemblyTitle>StackExchange.Redis</AssemblyTitle>
+  </PropertyGroup>
+
+</Project>

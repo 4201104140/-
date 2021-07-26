@@ -1,0 +1,10 @@
+﻿@namespace BlazorFluentUI
+@inherits ButtonParameters
+
+@code {
+    bool _menuShouldFocusOnMount = true;
+
+    [Parameter] public FluentUIComponentBase? ButtonBase { get; set; }
+    [Parameter] public bool ContextMenuShown { get; set; }
+    [Parameter] public EventCallback<bool> ContextMenuShownChanged { get; set; }
+}

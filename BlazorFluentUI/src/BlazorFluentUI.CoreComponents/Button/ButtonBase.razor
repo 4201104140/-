@@ -1,0 +1,33 @@
+﻿@namespace BlazorFluentUI
+@inherits ButtonParameters
+@using Microsoft.AspNetCore.Components.Web
+
+@{
+    isSplitButton = (Split);
+
+}
+
+@{
+    RenderFragment ButtonContentRederFragment() => __builder =>
+    {
+        //__builder.OpenComponent(AccessViolationException, typeof(ButtonContext))
+
+    };
+}
+
+@code {
+    private string GetClassNames()
+    {
+        string classNames = "ms-Button";
+        if (Primary)
+        {
+            classNames += " ms-Button--primary";
+        }
+        else
+        {
+            classNames += " ms-Button--default";
+        }
+
+        return classNames;
+    }
+}

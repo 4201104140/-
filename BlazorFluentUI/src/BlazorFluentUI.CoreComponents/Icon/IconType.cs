@@ -1,5 +1,4 @@
-﻿
-namespace BlazorFluentUI
+﻿namespace BlazorFluentUI
 {
     public enum IconType
     {

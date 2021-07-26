@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30709.132
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31423.177
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{8705FE0C-5AA7-4779-9337-49F162EBBCB5}"
 EndProject
@@ -14,17 +14,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{E3B81B9D-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServerSide", "ServerSide", "{4F4C7E62-2905-41AD-B19F-B96BD06792A1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFluentUI.Demo.ServerSide", "Demo\BlazorFluentUI.Demo.ServerSide\BlazorFluentUI.Demo.ServerSide.csproj", "{610D3A44-314B-476D-AB69-5E56CC0D4B0F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{7982B57A-B530-4827-94FB-FA3D5FC28FCE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFluentUI.Demo.Shared", "Demo\BlazorFluentUI.Demo.Shared\BlazorFluentUI.Demo.Shared.csproj", "{F92E1D3E-2B6D-4C89-8368-CA77C68C4678}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientSide", "ClientSide", "{AF6D0F5E-61AA-4EE6-9027-A70F9827E93B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFluentUI.Demo.ClientSide", "Demo\BlazorFluentUI.Demo.ClientSide\BlazorFluentUI.Demo.ClientSide.csproj", "{EB33723B-4401-459A-84A5-A8588B2410CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFluentUI.CoreComponents", "src\BlazorFluentUI.CoreComponents\BlazorFluentUI.CoreComponents.csproj", "{B9B2D296-431F-43BA-B778-89A9D26D5050}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorFluentUI.CoreComponents", "src\BlazorFluentUI.CoreComponents\BlazorFluentUI.CoreComponents.csproj", "{B9B2D296-431F-43BA-B778-89A9D26D5050}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFluentUI.Demo.Client", "Demo\BlazorFluentUI.Demo.Client\BlazorFluentUI.Demo.Client.csproj", "{C5D90906-CFEC-4608-B5C9-1F80AC2D25E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,34 +30,29 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{610D3A44-314B-476D-AB69-5E56CC0D4B0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{610D3A44-314B-476D-AB69-5E56CC0D4B0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{610D3A44-314B-476D-AB69-5E56CC0D4B0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{610D3A44-314B-476D-AB69-5E56CC0D4B0F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F92E1D3E-2B6D-4C89-8368-CA77C68C4678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F92E1D3E-2B6D-4C89-8368-CA77C68C4678}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F92E1D3E-2B6D-4C89-8368-CA77C68C4678}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F92E1D3E-2B6D-4C89-8368-CA77C68C4678}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EB33723B-4401-459A-84A5-A8588B2410CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB33723B-4401-459A-84A5-A8588B2410CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB33723B-4401-459A-84A5-A8588B2410CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB33723B-4401-459A-84A5-A8588B2410CE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B9B2D296-431F-43BA-B778-89A9D26D5050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9B2D296-431F-43BA-B778-89A9D26D5050}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9B2D296-431F-43BA-B778-89A9D26D5050}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9B2D296-431F-43BA-B778-89A9D26D5050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5D90906-CFEC-4608-B5C9-1F80AC2D25E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5D90906-CFEC-4608-B5C9-1F80AC2D25E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5D90906-CFEC-4608-B5C9-1F80AC2D25E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5D90906-CFEC-4608-B5C9-1F80AC2D25E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4F4C7E62-2905-41AD-B19F-B96BD06792A1} = {E3B81B9D-1FAB-4EBF-93B7-22821C42E959}
-		{610D3A44-314B-476D-AB69-5E56CC0D4B0F} = {4F4C7E62-2905-41AD-B19F-B96BD06792A1}
 		{7982B57A-B530-4827-94FB-FA3D5FC28FCE} = {E3B81B9D-1FAB-4EBF-93B7-22821C42E959}
 		{F92E1D3E-2B6D-4C89-8368-CA77C68C4678} = {7982B57A-B530-4827-94FB-FA3D5FC28FCE}
 		{AF6D0F5E-61AA-4EE6-9027-A70F9827E93B} = {E3B81B9D-1FAB-4EBF-93B7-22821C42E959}
-		{EB33723B-4401-459A-84A5-A8588B2410CE} = {AF6D0F5E-61AA-4EE6-9027-A70F9827E93B}
 		{B9B2D296-431F-43BA-B778-89A9D26D5050} = {8705FE0C-5AA7-4779-9337-49F162EBBCB5}
+		{C5D90906-CFEC-4608-B5C9-1F80AC2D25E6} = {AF6D0F5E-61AA-4EE6-9027-A70F9827E93B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {005E2EE3-4770-4CD9-A798-D917840CEF51}
