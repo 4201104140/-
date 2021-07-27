@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30717.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31521.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DBC87D14-6A31-4116-8248-851744EE8BCC}"
 EndProject
@@ -29,7 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Contro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Core", "src\OperatorFramework\src\Core\Microsoft.Kubernetes.Core.csproj", "{00547169-1B70-4AED-ACD3-BE46C44B73D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarp.ReverseProxy.Kubernetes.Protocol", "src\Yarp.ReverseProxy.Kubernetes.Protocol\Yarp.ReverseProxy.Kubernetes.Protocol.csproj", "{25817F52-2F15-46DC-9205-1374DCD06D76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yarp.ReverseProxy.Kubernetes.Protocol", "src\Yarp.ReverseProxy.Kubernetes.Protocol\Yarp.ReverseProxy.Kubernetes.Protocol.csproj", "{25817F52-2F15-46DC-9205-1374DCD06D76}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.ResourceKinds.OpenApi", "src\OperatorFramework\src\ResourceKinds.OpenApi\Microsoft.Kubernetes.ResourceKinds.OpenApi.csproj", "{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{25817F52-2F15-46DC-9205-1374DCD06D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25817F52-2F15-46DC-9205-1374DCD06D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25817F52-2F15-46DC-9205-1374DCD06D76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +95,7 @@ Global
 		{AF5CFA0D-63C6-4A18-BA64-99F5E2ABC8D4} = {0D58DED5-4CE9-472B-9EDE-A567826F4293}
 		{00547169-1B70-4AED-ACD3-BE46C44B73D0} = {0D58DED5-4CE9-472B-9EDE-A567826F4293}
 		{25817F52-2F15-46DC-9205-1374DCD06D76} = {DBC87D14-6A31-4116-8248-851744EE8BCC}
+		{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77} = {0D58DED5-4CE9-472B-9EDE-A567826F4293}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4C52120-FA36-4C4B-8028-272C413FBEDD}

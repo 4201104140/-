@@ -1,4 +1,6 @@
-﻿
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using System;
 using System.Collections.Generic;
 using Yarp.ReverseProxy.Utilities;
@@ -34,15 +36,61 @@ namespace Yarp.ReverseProxy.Configuration
         /// </summary>
         public string? ClusterId { get; init; }
 
+        /// <summary>
+        /// The name of the AuthorizationPolicy to apply to this route.
+        /// If not set then only the FallbackPolicy will apply.
+        /// Set to "Default" to enable authorization with the applications default policy.
+        /// Set to "Anonymous" to disable all authorization checks for this route.
+        /// </summary>
+        public string? AuthorizationPolicy { get; init; }
+
+        /// <summary>
+        /// The name of the CorsPolicy to apply to this route.
+        /// If not set then the route won't be automatically matched for cors preflight requests.
+        /// Set to "Default" to enable cors with the default policy.
+        /// Set to "Disable" to refuses cors requests for this route.
+        /// </summary>
+        public string? CorsPolicy { get; init; }
+
+        /// <summary>
+        /// Arbitrary key-value pairs that further describe this route.
+        /// </summary>
+        public IReadOnlyDictionary<string, string>? Metadata { get; init; }
+
+        /// <summary>
+        /// Parameters used to transform the request and response. See <see cref="Service.ITransformBuilder"/>.
+        /// </summary>
+        public IReadOnlyList<IReadOnlyDictionary<string, string>>? Transforms { get; init; }
+
+        /// <inheritdoc />
+        public bool Equals(RouteConfig? other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return Order == other.Order
+                && string.Equals(RouteId, other.RouteId, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(ClusterId, other.ClusterId, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(AuthorizationPolicy, other.AuthorizationPolicy, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(CorsPolicy, other.CorsPolicy, StringComparison.OrdinalIgnoreCase)
+                && Match == other.Match
+                && CaseInsensitiveEqualHelper.Equals(Metadata, other.Metadata)
+                && CaseInsensitiveEqualHelper.Equals(Transforms, other.Transforms);
+        }
+
         /// <inheritdoc />
         public override int GetHashCode()
         {
             return HashCode.Combine(Order,
                 RouteId?.GetHashCode(StringComparison.OrdinalIgnoreCase),
                 ClusterId?.GetHashCode(StringComparison.OrdinalIgnoreCase),
-
-                Match
-                );
+                AuthorizationPolicy?.GetHashCode(StringComparison.OrdinalIgnoreCase),
+                CorsPolicy?.GetHashCode(StringComparison.OrdinalIgnoreCase),
+                Match,
+                Metadata,
+                Transforms);
         }
     }
 }

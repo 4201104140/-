@@ -1,4 +1,7 @@
-﻿namespace Microsoft.Kubernetes.ResourceKinds
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+namespace Microsoft.Kubernetes.ResourceKinds
 {
     public enum ElementMergeStrategy
     {

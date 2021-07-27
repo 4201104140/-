@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace BasicYarpSample
+namespace BasicYARPSample
 {
+    // Sets up the ASP.NET application with the reverse proxy enabled.
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -17,7 +17,8 @@ namespace BasicYarpSample
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // This method gets called by the runtime. Use this method to add capabilities to
+        // the web application via services in the DI container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Add the reverse proxy to capability to the server
@@ -26,16 +27,17 @@ namespace BasicYarpSample
             proxyBuilder.LoadFromConfig(Configuration.GetSection("ReverseProxy"));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This method gets called by the runtime. Use this method to configure the HTTP request 
+        // pipeline that handles requests
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            // Enable endpoint routing, required for the reverse proxy
             app.UseRouting();
-
+            // Register the reverse proxy routes
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapReverseProxy();
