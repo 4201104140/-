@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System.Threading;
@@ -12,8 +12,7 @@ namespace Yarp.ReverseProxy.Utilities
         /// <summary>
         /// Gets the current value of the counter.
         /// </summary>
-        public int Value
-        {
+        public int Value {
             get => Volatile.Read(ref _value);
             set => Volatile.Write(ref _value, value);
         }

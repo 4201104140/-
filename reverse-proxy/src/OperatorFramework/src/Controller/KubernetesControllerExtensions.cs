@@ -1,6 +1,9 @@
-﻿using k8s;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+using k8s;
 using k8s.Models;
-//using Microsoft.Kubernetes.Controller.Informers;
+using Microsoft.Kubernetes.Controller.Informers;
 using System.Linq;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -11,14 +14,25 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services = services.AddKubernetesCore();
 
+            if (!services.Any(serviceDescriptor => serviceDescriptor.ServiceType == typeof(IResourceInformer<>)))
+            {
+                services = services.AddSingleton(typeof(IResourceInformer<>), typeof(ResourceInformer<>));
+            }
+
             return services;
         }
 
-        //public static IServiceCollection RegisterResourceInformer<TResource>(this IServiceCollection services)
-        //    where TResource : class, IKubernetesObject<V1ObjectMeta>, new()
-        //{
-        //    return services
-        //        .RegisterHostedService<>
-        //}
+        /// <summary>
+        /// Registers the resource informer.
+        /// </summary>
+        /// <typeparam name="TResource">The type of the t related resource.</typeparam>
+        /// <param name="services">The services.</param>
+        /// <returns>IServiceCollection.</returns>
+        public static IServiceCollection RegisterResourceInformer<TResource>(this IServiceCollection services)
+            where TResource : class, IKubernetesObject<V1ObjectMeta>, new()
+        {
+            return services
+                .RegisterHostedService<IResourceInformer<TResource>>();
+        }
     }
 }

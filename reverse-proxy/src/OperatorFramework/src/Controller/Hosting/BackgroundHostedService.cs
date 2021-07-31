@@ -26,7 +26,7 @@ namespace Microsoft.Kubernetes.Controller.Hosting
         private bool _disposedValue;
 #pragma warning disable CA2213 // Disposable fields should be disposed
         private Task _runTask;
-#pragma warning restore CA2213 // Disposable fields should be disposed     
+#pragma warning restore CA2213 // Disposable fields should be disposed        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BackgroundHostedService"/> class.
@@ -67,7 +67,57 @@ namespace Microsoft.Kubernetes.Controller.Hosting
         /// <returns>Task.</returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            // fork off a new async causality line beginning with the call to RunAsync
+            _runTask = Task.Run(CallRunAsync);
+
+            // the rest of the startup sequence should proceed without delay
             return Task.CompletedTask;
+
+            // entry-point to run async background work separated from the startup sequence
+            async Task CallRunAsync()
+            {
+                // don't bother running in case of abnormally early shutdown
+                _runCancellation.Token.ThrowIfCancellationRequested();
+
+                try
+                {
+                    Logger?.LogInformation(
+                        new EventId(1, "RunStarting"),
+                        "Calling RunAsync for {BackgroundHostedService}",
+                        _serviceTypeName);
+
+                    try
+                    {
+                        // call the overridden method
+                        await RunAsync(_runCancellation.Token).ConfigureAwait(true);
+                    }
+                    finally
+                    {
+                        Logger?.LogInformation(
+                            new EventId(2, "RunComplete"),
+                            "RunAsync completed for {BackgroundHostedService}",
+                            _serviceTypeName);
+                    }
+                }
+                catch
+                {
+                    if (!_hostApplicationLifetime.ApplicationStopping.IsCancellationRequested)
+                    {
+                        // For any exception the application is instructed to tear down.
+                        // this would normally happen if IHostedService.StartAsync throws, so it
+                        // is a safe assumption the intent of an unhandled exception from background
+                        // RunAsync is the same.
+                        _hostApplicationLifetime.StopApplication();
+
+                        Logger?.LogInformation(
+                            new EventId(3, "RequestedStopApplication"),
+                            "Called StopApplication for {BackgroundHostedService}",
+                            _serviceTypeName);
+                    }
+
+                    throw;
+                }
+            }
         }
 
         /// <summary>
@@ -98,6 +148,13 @@ namespace Microsoft.Kubernetes.Controller.Hosting
                 _runTask = null;
             }
         }
+
+        /// <summary>
+        /// Runs the asynchronous background work.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>A <see cref="Task" /> representing the result of the asynchronous operation.</returns>
+        public abstract Task RunAsync(CancellationToken cancellationToken);
 
         protected virtual void Dispose(bool disposing)
         {

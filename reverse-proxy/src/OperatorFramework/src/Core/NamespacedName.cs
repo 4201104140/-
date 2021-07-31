@@ -1,9 +1,10 @@
-﻿
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using k8s;
 using k8s.Models;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 
 namespace Microsoft.Kubernetes
 {
@@ -20,7 +21,7 @@ namespace Microsoft.Kubernetes
         /// </summary>
         /// <param name="namespace">The namespace.</param>
         /// <param name="name">The name.</param>
-        [JsonConstructor]
+        [Newtonsoft.Json.JsonConstructor]
         public NamespacedName(string @namespace, string name)
         {
             Namespace = @namespace;

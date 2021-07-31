@@ -1,4 +1,6 @@
-﻿
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +8,8 @@ using System.Threading.Tasks;
 namespace Microsoft.Kubernetes.Controller.Informers
 {
     /// <summary>
-    /// Returned by <see cref="IResourceInformer{TResource}.Re"/>
+    /// Returned by <see cref="IResourceInformer{TResource}.Register(ResourceInformerCallback{TResource})"/> to control the lifetime of an event
+    /// notification connection. Call <see cref="IDisposable.Dispose()"/> when the lifetime of the notification receiver is ending.
     /// </summary>
     public interface IResourceInformerRegistration : IDisposable
     {

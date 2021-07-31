@@ -1,7 +1,10 @@
-﻿
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using System;
 using System.Collections.Generic;
 using Yarp.ReverseProxy.Configuration;
+using Yarp.ReverseProxy.Forwarder;
 
 namespace Yarp.ReverseProxy.Transforms.Builder
 {
@@ -21,6 +24,11 @@ namespace Yarp.ReverseProxy.Transforms.Builder
         /// </summary>
         IReadOnlyList<Exception> ValidateCluster(ClusterConfig cluster);
 
+        /// <summary>
+        /// Builds the transforms for the given route into executable rules.
+        /// </summary>
+        HttpTransformer Build(RouteConfig route, ClusterConfig? cluster);
 
+        HttpTransformer Create(Action<TransformBuilderContext> action);
     }
 }

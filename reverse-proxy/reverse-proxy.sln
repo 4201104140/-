@@ -33,6 +33,24 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yarp.ReverseProxy.Kubernete
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.ResourceKinds.OpenApi", "src\OperatorFramework\src\ResourceKinds.OpenApi\Microsoft.Kubernetes.ResourceKinds.OpenApi.csproj", "{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B41F9EA7-F4C2-4381-BD33-861FFF08FD7A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "docfx", "docs\docfx\docfx.csproj", "{7981DC46-7AB1-4F83-B438-21A887E65B2C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B27378F3-27D7-4081-BB7C-4EE158FF0E35}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+		NuGet.config = NuGet.config
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleServer", "samples\SampleServer\SampleServer.csproj", "{E47A9F45-1D47-4358-8CCE-A7C09CE7F544}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseProxy.Minimal.Sample", "samples\ReverseProxy.Minimal.Sample\ReverseProxy.Minimal.Sample.csproj", "{AEF625C5-8356-4995-B5F9-1C52C3047258}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KubernetesIngress.Sample", "KubernetesIngress.Sample", "{149ED0DD-24ED-4A86-B70B-B6E202F035D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{00B34CC9-6E7F-4FE3-B8A6-BE0B7ABB14C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +97,18 @@ Global
 		{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7981DC46-7AB1-4F83-B438-21A887E65B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7981DC46-7AB1-4F83-B438-21A887E65B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7981DC46-7AB1-4F83-B438-21A887E65B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7981DC46-7AB1-4F83-B438-21A887E65B2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E47A9F45-1D47-4358-8CCE-A7C09CE7F544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E47A9F45-1D47-4358-8CCE-A7C09CE7F544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E47A9F45-1D47-4358-8CCE-A7C09CE7F544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E47A9F45-1D47-4358-8CCE-A7C09CE7F544}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEF625C5-8356-4995-B5F9-1C52C3047258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEF625C5-8356-4995-B5F9-1C52C3047258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEF625C5-8356-4995-B5F9-1C52C3047258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEF625C5-8356-4995-B5F9-1C52C3047258}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +126,11 @@ Global
 		{00547169-1B70-4AED-ACD3-BE46C44B73D0} = {0D58DED5-4CE9-472B-9EDE-A567826F4293}
 		{25817F52-2F15-46DC-9205-1374DCD06D76} = {DBC87D14-6A31-4116-8248-851744EE8BCC}
 		{FF2A0CED-CD24-4BB9-ADC4-ADCD08068A77} = {0D58DED5-4CE9-472B-9EDE-A567826F4293}
+		{7981DC46-7AB1-4F83-B438-21A887E65B2C} = {B41F9EA7-F4C2-4381-BD33-861FFF08FD7A}
+		{E47A9F45-1D47-4358-8CCE-A7C09CE7F544} = {0C17C91C-3F7A-4D65-A338-9B7FEE26DE81}
+		{AEF625C5-8356-4995-B5F9-1C52C3047258} = {0C17C91C-3F7A-4D65-A338-9B7FEE26DE81}
+		{149ED0DD-24ED-4A86-B70B-B6E202F035D9} = {0C17C91C-3F7A-4D65-A338-9B7FEE26DE81}
+		{00B34CC9-6E7F-4FE3-B8A6-BE0B7ABB14C1} = {149ED0DD-24ED-4A86-B70B-B6E202F035D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4C52120-FA36-4C4B-8028-272C413FBEDD}

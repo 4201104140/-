@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 using System;
@@ -25,10 +25,16 @@ namespace Microsoft.AspNetCore.Builder
         {
             return endpoints.MapReverseProxy(app =>
             {
-                app.useSe
+                app.UseSessionAffinity();
+                app.UseLoadBalancing();
+                app.UsePassiveHealthChecks();
             });
         }
 
+        /// <summary>
+        /// Adds Reverse Proxy routes to the route table with the customized processing pipeline. The pipeline includes
+        /// by default the initialization step and the final proxy step, but not LoadBalancingMiddleware or other intermediate components.
+        /// </summary>
         public static ReverseProxyConventionBuilder MapReverseProxy(this IEndpointRouteBuilder endpoints, Action<IReverseProxyApplicationBuilder> configureApp)
         {
             if (endpoints is null)
@@ -40,13 +46,31 @@ namespace Microsoft.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(configureApp));
             }
 
+            var proxyAppBuilder = new ReverseProxyApplicationBuilder(endpoints.CreateApplicationBuilder());
+            proxyAppBuilder.UseMiddleware<ProxyPipelineInitializerMiddleware>();
+            configureApp(proxyAppBuilder);
+            proxyAppBuilder.UseMiddleware<ForwarderMiddleware>();
+            var app = proxyAppBuilder.Build();
+
+            var proxyEndpointFactory = endpoints.ServiceProvider.GetRequiredService<ProxyEndpointFactory>();
+            proxyEndpointFactory.SetProxyPipeline(app);
+
             return GetOrCreateDataSource(endpoints).DefaultBuilder;
         }
 
         private static ProxyConfigManager GetOrCreateDataSource(IEndpointRouteBuilder endpoints)
         {
             var dataSource = endpoints.DataSources.OfType<ProxyConfigManager>().FirstOrDefault();
+            if (dataSource == null)
+            {
+                dataSource = endpoints.ServiceProvider.GetRequiredService<ProxyConfigManager>();
+                endpoints.DataSources.Add(dataSource);
 
+                // Config validation is async but startup is sync. We want this to block so that A) any validation errors can prevent
+                // the app from starting, and B) so that all the config is ready before the server starts accepting requests.
+                // Reloads will be async.
+                dataSource.InitialLoadAsync().GetAwaiter().GetResult();
+            }
 
             return dataSource;
         }
