@@ -1,29 +1,32 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+using k8s.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Yarp.ReverseProxy.Kubernetes.Controller.Caching;
 using Yarp.ReverseProxy.Kubernetes.Controller.Dispatching;
+using Yarp.ReverseProxy.Kubernetes.Controller.Services;
 
 namespace Yarp.ReverseProxy.Kubernetes.Controller
 {
     public class Startup
     {
-
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+#pragma warning disable CA1822 // Mark members as static
         public void ConfigureServices(IServiceCollection services)
+#pragma warning restore CA1822 // Mark members as static
         {
-            // Add components from the kubernetes controller framweork
-            //services.AddKubernetesControllerRuntime();
+            // Add components from the kubernetes controller framework
+            services.AddKubernetesControllerRuntime();
 
             // Add components implemented by this application
+            services.AddHostedService<IngressController>();
+            services.AddSingleton<ICache, IngressCache>();
+            services.AddTransient<IReconciler, Reconciler>();
             services.AddSingleton<IDispatcher, Dispatcher>();
 
             // Add ASP.NET Core controller supoort

@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Remove="Controller\Informers\*.yaml" />
         <None Remove="Resources\*.yaml" />
     </ItemGroup>
 

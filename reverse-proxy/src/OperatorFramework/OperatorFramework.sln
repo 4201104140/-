@@ -8,6 +8,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".repo", ".repo", "{7455F9D8-FC78-40A8-9873-61A6137150B0}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Core", "src\Core\Microsoft.Kubernetes.Core.csproj", "{F526B912-B0C7-4ABC-8E5E-92CF5574FA82}"
@@ -30,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{379A48A8-8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.UnitTests", "test\UnitTests\Microsoft.Kubernetes.UnitTests.csproj", "{FD55384A-F4AC-4D6F-9B6F-5DB43998E190}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodStatusConditions", "examples\PodStatusConditions\PodStatusConditions.csproj", "{6CD6E704-BF0B-4B67-B9D8-4D5C6306266F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PodStatusConditions", "examples\PodStatusConditions\PodStatusConditions.csproj", "{6CD6E704-BF0B-4B67-B9D8-4D5C6306266F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

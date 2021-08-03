@@ -17,5 +17,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Microsoft.Kubernetes.Core.csproj" />
   </ItemGroup>
+    
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
 
 </Project>
