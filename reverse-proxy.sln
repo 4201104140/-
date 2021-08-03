@@ -7,30 +7,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4DE1C28D-E45
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".repo", ".repo", "{7455F9D8-FC78-40A8-9873-61A6137150B0}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
+		reverse-proxy\src\OperatorFramework\.editorconfig = reverse-proxy\src\OperatorFramework\.editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Core", "src\Core\Microsoft.Kubernetes.Core.csproj", "{F526B912-B0C7-4ABC-8E5E-92CF5574FA82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Core", "reverse-proxy\src\OperatorFramework\src\Core\Microsoft.Kubernetes.Core.csproj", "{F526B912-B0C7-4ABC-8E5E-92CF5574FA82}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Controller", "src\Controller\Microsoft.Kubernetes.Controller.csproj", "{E9C146AD-7FB5-434B-AA37-5CC0688CA60E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Controller", "reverse-proxy\src\OperatorFramework\src\Controller\Microsoft.Kubernetes.Controller.csproj", "{E9C146AD-7FB5-434B-AA37-5CC0688CA60E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.ResourceKinds.OpenApi", "src\ResourceKinds.OpenApi\Microsoft.Kubernetes.ResourceKinds.OpenApi.csproj", "{A8F3D9BE-72E5-418B-952F-9503EB9A1532}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.ResourceKinds.OpenApi", "reverse-proxy\src\OperatorFramework\src\ResourceKinds.OpenApi\Microsoft.Kubernetes.ResourceKinds.OpenApi.csproj", "{A8F3D9BE-72E5-418B-952F-9503EB9A1532}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{D977D1A4-2155-436A-9FA9-8B3F022CAFB2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicOperator", "examples\BasicOperator\BasicOperator.csproj", "{6E40ADB6-8A92-4AF8-9881-D9B128BD3D35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicOperator", "reverse-proxy\src\OperatorFramework\examples\BasicOperator\BasicOperator.csproj", "{6E40ADB6-8A92-4AF8-9881-D9B128BD3D35}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.CustomResources", "src\CustomResource\Microsoft.Kubernetes.CustomResources.csproj", "{E514D96E-BECB-4D8B-B632-E478241B3594}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.CustomResources", "reverse-proxy\src\OperatorFramework\src\CustomResource\Microsoft.Kubernetes.CustomResources.csproj", "{E514D96E-BECB-4D8B-B632-E478241B3594}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Operator", "src\Operator\Microsoft.Kubernetes.Operator.csproj", "{2350146B-D812-4A33-AA68-53CB285C5516}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Operator", "reverse-proxy\src\OperatorFramework\src\Operator\Microsoft.Kubernetes.Operator.csproj", "{2350146B-D812-4A33-AA68-53CB285C5516}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Testing", "src\Testing\Microsoft.Kubernetes.Testing.csproj", "{FF3D2887-7338-4756-AA1A-56019E3D5583}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.Testing", "reverse-proxy\src\OperatorFramework\src\Testing\Microsoft.Kubernetes.Testing.csproj", "{FF3D2887-7338-4756-AA1A-56019E3D5583}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{379A48A8-8EAF-4B22-9448-745BD7B01C1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.UnitTests", "test\UnitTests\Microsoft.Kubernetes.UnitTests.csproj", "{FD55384A-F4AC-4D6F-9B6F-5DB43998E190}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodStatusConditions", "examples\PodStatusConditions\PodStatusConditions.csproj", "{6CD6E704-BF0B-4B67-B9D8-4D5C6306266F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Kubernetes.UnitTests", "reverse-proxy\src\OperatorFramework\test\UnitTests\Microsoft.Kubernetes.UnitTests.csproj", "{FD55384A-F4AC-4D6F-9B6F-5DB43998E190}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,10 +68,6 @@ Global
 		{FD55384A-F4AC-4D6F-9B6F-5DB43998E190}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD55384A-F4AC-4D6F-9B6F-5DB43998E190}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD55384A-F4AC-4D6F-9B6F-5DB43998E190}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CD6E704-BF0B-4B67-B9D8-4D5C6306266F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CD6E704-BF0B-4B67-B9D8-4D5C6306266F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CD6E704-BF0B-4B67-B9D8-4D5C6306266F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CD6E704-BF0B-4B67-B9D8-4D5C6306266F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,7 +81,6 @@ Global
 		{2350146B-D812-4A33-AA68-53CB285C5516} = {4DE1C28D-E45E-4A4E-BFF4-17B16E6B3ACD}
 		{FF3D2887-7338-4756-AA1A-56019E3D5583} = {4DE1C28D-E45E-4A4E-BFF4-17B16E6B3ACD}
 		{FD55384A-F4AC-4D6F-9B6F-5DB43998E190} = {379A48A8-8EAF-4B22-9448-745BD7B01C1C}
-		{6CD6E704-BF0B-4B67-B9D8-4D5C6306266F} = {D977D1A4-2155-436A-9FA9-8B3F022CAFB2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5DDB5CBF-655B-4135-8965-DAF4ED63852A}

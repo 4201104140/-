@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Kubernetes.ResourceKinds;
 using Microsoft.Kubernetes.ResourceKinds.OpenApi;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 using System.Threading.Tasks;
 
 namespace BasicOperator
@@ -17,21 +19,45 @@ namespace BasicOperator
     {
         public static async Task<int> Main(string[] args)
         {
-            var hostbuilder = new HostBuilder();
+            using var serilog = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+                .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                .CreateLogger();
 
-            hostbuilder.ConfigureHostConfiguration(hostConfiguration =>
+            var hostBuilder = new HostBuilder();
+
+            hostBuilder.ConfigureHostConfiguration(hostConfiguration =>
             {
                 hostConfiguration.AddCommandLine(args);
             });
 
-            hostbuilder.ConfigureServices(services =>
+            hostBuilder.ConfigureServices(services =>
             {
+                services.AddLogging(logging =>
+                {
+                    logging.AddSerilog(serilog, dispose: false);
+                });
+
                 services.AddTransient<IResourceKindProvider, OpenApiResourceKindProvider>();
 
-                services.AddOperator
+                services.AddCustomResourceDefinitionUpdater<V1alpha1HelloWorld>(options =>
+                {
+                    options.Scope = "Namespaced";
+                });
+
+                services.AddOperator<V1alpha1HelloWorld>(settings =>
+                {
+                    settings
+                        .WithRelatedResource<V1Deployment>()
+                        .WithRelatedResource<V1ServiceAccount>()
+                        .WithRelatedResource<V1Service>();
+
+                    settings.WithGenerator<HelloWorldGenerator>();
+                });
             });
 
-            await hostbuilder.RunConsoleAsync();
+            await hostBuilder.RunConsoleAsync();
             return 0;
         }
     }

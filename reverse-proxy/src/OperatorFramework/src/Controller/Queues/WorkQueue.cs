@@ -136,14 +136,25 @@ namespace Microsoft.Kubernetes.Controller.Queues
             }
         }
 
+        /// <summary>
+        /// Shuts down.
+        /// </summary>
         public void ShutDown()
         {
-            throw new NotImplementedException();
+            lock (_sync)
+            {
+                _shuttingDown.Cancel();
+                _semaphore.Release();
+            }
         }
 
+        /// <summary>
+        /// Shuttings down.
+        /// </summary>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public bool ShuttingDown()
         {
-            throw new NotImplementedException();
+            return _shuttingDown.IsCancellationRequested;
         }
 
         /// <summary>

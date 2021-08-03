@@ -1,15 +1,18 @@
-﻿
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using k8s;
 using Microsoft.Extensions.Options;
 using Microsoft.Kubernetes;
 using Microsoft.Kubernetes.Client;
+using Microsoft.Kubernetes.ResourceKinds;
 using Microsoft.Kubernetes.Resources;
 using System.Linq;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
-    /// Class KubernetsCoreExtensions.
+    /// Class KubernetesCoreExtensions.
     /// </summary>
     public static class KubernetesCoreExtensions
     {
@@ -41,6 +44,16 @@ namespace Microsoft.Extensions.DependencyInjection
             if (!services.Any(serviceDescriptor => serviceDescriptor.ServiceType == typeof(IResourceSerializers)))
             {
                 services = services.AddTransient<IResourceSerializers, ResourceSerializers>();
+            }
+
+            if (!services.Any(serviceDescriptor => serviceDescriptor.ServiceType == typeof(IResourcePatcher)))
+            {
+                services = services.AddTransient<IResourcePatcher, ResourcePatcher>();
+            }
+
+            if (!services.Any(serviceDescriptor => serviceDescriptor.ServiceType == typeof(IResourceKindManager)))
+            {
+                services = services.AddSingleton<IResourceKindManager, ResourceKindManager>();
             }
 
             return services;
