@@ -29,12 +29,18 @@ namespace Yarp.ReverseProxy.Kubernetes.Controller
             services.AddTransient<IReconciler, Reconciler>();
             services.AddSingleton<IDispatcher, Dispatcher>();
 
-            // Add ASP.NET Core controller supoort
+            // Register the necessary Kubernetes resource informers
+            services.RegisterResourceInformer<V1Ingress>();
+            services.RegisterResourceInformer<V1Endpoints>();
+
+            // Add ASP.NET Core controller support
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+#pragma warning disable CA1822 // Mark members as static
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+#pragma warning restore CA1822 // Mark members as static
         {
             if (env.IsDevelopment())
             {

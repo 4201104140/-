@@ -50,7 +50,21 @@ namespace Yarp.ReverseProxy.Kubernetes.Controller.Services
                     Key = $"{key.Namespace}:{key.Name}"
                 };
                 var context = new YarpIngressContext(data.Ingress, data.EndpointsList);
-                Ya
+                YarpParser.CovertFromKubernetesIngress(context);
+
+                message.Cluster = context.Clusters;
+                message.Routes = context.Routes;
+
+                var bytes = JsonSerializer.SerializeToUtf8Bytes(message);
+
+                _logger.LogInformation(JsonSerializer.Serialize(message));
+
+                await _dispatcher.SendAsync(target, bytes, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex.Message);
+                throw;
             }
         }
     }

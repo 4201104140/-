@@ -45,11 +45,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleServer", "samples\SampleServer\SampleServer.csproj", "{E47A9F45-1D47-4358-8CCE-A7C09CE7F544}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReverseProxy.Minimal.Sample", "samples\ReverseProxy.Minimal.Sample\ReverseProxy.Minimal.Sample.csproj", "{AEF625C5-8356-4995-B5F9-1C52C3047258}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReverseProxy.Minimal.Sample", "samples\ReverseProxy.Minimal.Sample\ReverseProxy.Minimal.Sample.csproj", "{AEF625C5-8356-4995-B5F9-1C52C3047258}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KubernetesIngress.Sample", "KubernetesIngress.Sample", "{149ED0DD-24ED-4A86-B70B-B6E202F035D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{00B34CC9-6E7F-4FE3-B8A6-BE0B7ABB14C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend", "samples\KubernetesIngress.Sample\backend\backend.csproj", "{4C22FE58-8DEF-4169-A747-3AEA2592A148}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ingress", "Ingress", "{174BA208-0D8C-448E-A0CE-D102BD9630E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yarp.ReverseProxy.Kubernetes.Ingress", "samples\KubernetesIngress.Sample\Ingress\Yarp.ReverseProxy.Kubernetes.Ingress\Yarp.ReverseProxy.Kubernetes.Ingress.csproj", "{B177ED2E-4F54-4A2D-BF6D-A15B61025318}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testassets", "testassets", "{90ECF25D-8D95-400E-BDF6-58FCD5A2A8E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenchmarkApp", "testassets\BenchmarkApp\BenchmarkApp.csproj", "{0C94F9C5-55F1-4FD1-A808-05FCEDE684B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +119,18 @@ Global
 		{AEF625C5-8356-4995-B5F9-1C52C3047258}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEF625C5-8356-4995-B5F9-1C52C3047258}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEF625C5-8356-4995-B5F9-1C52C3047258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C22FE58-8DEF-4169-A747-3AEA2592A148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C22FE58-8DEF-4169-A747-3AEA2592A148}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C22FE58-8DEF-4169-A747-3AEA2592A148}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C22FE58-8DEF-4169-A747-3AEA2592A148}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B177ED2E-4F54-4A2D-BF6D-A15B61025318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B177ED2E-4F54-4A2D-BF6D-A15B61025318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B177ED2E-4F54-4A2D-BF6D-A15B61025318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B177ED2E-4F54-4A2D-BF6D-A15B61025318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C94F9C5-55F1-4FD1-A808-05FCEDE684B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C94F9C5-55F1-4FD1-A808-05FCEDE684B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C94F9C5-55F1-4FD1-A808-05FCEDE684B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C94F9C5-55F1-4FD1-A808-05FCEDE684B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +153,10 @@ Global
 		{AEF625C5-8356-4995-B5F9-1C52C3047258} = {0C17C91C-3F7A-4D65-A338-9B7FEE26DE81}
 		{149ED0DD-24ED-4A86-B70B-B6E202F035D9} = {0C17C91C-3F7A-4D65-A338-9B7FEE26DE81}
 		{00B34CC9-6E7F-4FE3-B8A6-BE0B7ABB14C1} = {149ED0DD-24ED-4A86-B70B-B6E202F035D9}
+		{4C22FE58-8DEF-4169-A747-3AEA2592A148} = {00B34CC9-6E7F-4FE3-B8A6-BE0B7ABB14C1}
+		{174BA208-0D8C-448E-A0CE-D102BD9630E0} = {149ED0DD-24ED-4A86-B70B-B6E202F035D9}
+		{B177ED2E-4F54-4A2D-BF6D-A15B61025318} = {174BA208-0D8C-448E-A0CE-D102BD9630E0}
+		{0C94F9C5-55F1-4FD1-A808-05FCEDE684B4} = {90ECF25D-8D95-400E-BDF6-58FCD5A2A8E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4C52120-FA36-4C4B-8028-272C413FBEDD}
