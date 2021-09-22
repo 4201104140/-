@@ -1,0 +1,18 @@
+﻿[
+  {
+    "outputFileName": "wwwroot/blazorFluentUI.min.js",
+    "inputFiles": [
+      "wwwroot/baseComponent.js",
+      "wwwroot/callout.js",
+      "wwwroot/detailsList.js",
+      "wwwroot/documentCard.js",
+      "wwwroot/focusTrapZone.js",
+      "wwwroot/focusZone.js",
+      "wwwroot/list.js",
+      "wwwroot/marqueeSelection.js",
+      "wwwroot/selectionZone.js",
+      "wwwroot/slider.js"
+    ],
+    "sourceMap": false
+  }
+]

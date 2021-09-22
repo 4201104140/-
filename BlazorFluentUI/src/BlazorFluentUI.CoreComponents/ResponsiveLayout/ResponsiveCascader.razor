@@ -1,6 +1,6 @@
 ﻿@namespace BlazorFluentUI
 @inherits ResponsiveComponentBase
 
-@code {
-
-}
+<CascadingValue Value="CurrentMode">
+    @ChildContent
+</CascadingValue>

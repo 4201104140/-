@@ -1,68 +1,24 @@
-﻿.iconExample {
-    font-size: 50px;
+﻿html, body, button, input, textarea {
+    font-size: 15px;
+    font-family: Segoe UI,SegoeUI,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
-    .iconExample.red {
-        color: red;
-    }
-
-.section {
-    background: var(--semanticColors-BodyBackground);
-    padding: 28px;
-    margin-bottom: 28px;
-    border-radius: 2px;
-    background-clip: padding-box;
-    -webkit-box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,.132),0 .3px .9px 0 rgba(0,0,0,.108);
-    box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,.132),0 .3px .9px 0 rgba(0,0,0,.108);
-    position: relative;
-    /*opacity: 0;*/
-    -webkit-transform: translate3d(0,48px,0);
-    transform: translate3d(0,48px,0);
-    -webkit-transition: opacity .3s cubic-bezier(.1,.9,.2,1) 50ms,-webkit-transform .3s cubic-bezier(.1,.9,.2,1);
-    transition: opacity .3s cubic-bezier(.1,.9,.2,1) 50ms,-webkit-transform .3s cubic-bezier(.1,.9,.2,1);
-    transition: transform .3s cubic-bezier(.1,.9,.2,1),opacity .3s cubic-bezier(.1,.9,.2,1) 50ms;
-    transition: transform .3s cubic-bezier(.1,.9,.2,1),opacity .3s cubic-bezier(.1,.9,.2,1) 50ms,-webkit-transform .3s cubic-bezier(.1,.9,.2,1)
+body {
+    margin: 0;
 }
 
-
-.subSection {
-    margin-bottom: 36px
+.top-row {
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
 }
-
-    .subSection:last-child {
-        margin-bottom: 0
-    }
-
 
 .siteWrapper {
     -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
     flex-grow: 1;
     margin: 0 auto;
     width: 100%;
-    /*max-width: 1650px;*/
     position: relative;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    font-size: 16px
-}
 
-.title {
-    align-items: baseline;
-    color: var(--semanticTextColors-BodyText);
-    display: flex;
-    font-size: 32px;
-    font-weight: 600;
-    line-height: 1;
-    margin: 0px;
-}
-
-.root {
-    margin-bottom: 0px;
-    padding-top: 25px;
 }

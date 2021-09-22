@@ -1,18 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>BlazorFluentUI.Demo.Shared</RootNamespace>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace>BlazorFluentUI.Demo.Shared</RootNamespace>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-preview.6.21355.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="DynamicData" Version="7.3.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.9" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\BlazorFluentUI.CoreComponents\BlazorFluentUI.CoreComponents.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\BlazorFluentUI.CoreComponents\BlazorFluentUI.CoreComponents.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="$(ProjectDir)\Pages\*.razor" />
+	</ItemGroup>
+
 
 </Project>

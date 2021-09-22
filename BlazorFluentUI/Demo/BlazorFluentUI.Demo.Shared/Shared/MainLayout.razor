@@ -1,13 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Components
 @inherits LayoutComponentBase
 
+
 <div class="siteWrapper">
     <Stack Horizontal="true" Style="width:100%;">
-        <StackItem Grow="1" Style="overflow:hidden">
+        <ResponsiveLayout MinWidth="ResponsiveMode.Medium.ToMinCssValue()">
+            <StackItem Style="height:100%;overflow:hidden;">
+                <NavMenu />
+            </StackItem>
+        </ResponsiveLayout>
+        <StackItem>
+            <Stack>
 
+            </Stack>
         </StackItem>
     </Stack>
+    @Body
 </div>
-
-@Body
-

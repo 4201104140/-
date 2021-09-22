@@ -1,6 +1,8 @@
 ﻿<Router AppAssembly="typeof(MainLayout).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <ResponsiveCascader>
+            <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)"/>
+        </ResponsiveCascader>
     </Found>
     <NotFound>
         <p>Page not found.</p>

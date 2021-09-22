@@ -1,39 +1,87 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <AssemblyName>BlazorFluentUI.CoreComponents</AssemblyName>
-    <RootNamespace>BlazorFluentUI</RootNamespace>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<AssemblyName>BlazorFluentUI.CoreComponents</AssemblyName>
+		<RootNamespace>BlazorFluentUI</RootNamespace>
+		<Nullable>enable</Nullable>
+		<Product>BlazorFluentUI.CoreComponents</Product>
+		<Description>All the components from the BlazorFluentUI component library, a Blazor clone of the Fluent UI React library, that don't rely on DynamicData package</Description>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-preview.6.21355.2" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.4.0-beta">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="BaseComponent\Extensions\MemoExtension.cs" />
+		<Compile Remove="BaseComponent\Layer\ObservableDictionary.cs" />
+		<Compile Remove="ResponsiveLayout\Collections\Comparer2.cs" />
+		<Compile Remove="ResponsiveLayout\Collections\DictionaryEnumerator.cs" />
+		<Compile Remove="ResponsiveLayout\Collections\IOrderedDictionary.cs" />
+		<Compile Remove="ResponsiveLayout\Collections\KeyedCollection2.cs" />
+		<Compile Remove="ResponsiveLayout\Collections\OrderedDictionary.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <TypeScriptCompile Include="tsconfig.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </TypeScriptCompile>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="bundleconfig.json" />
+		<Content Remove="tsconfig.json" />
+	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptTarget>ES2015</TypeScriptTarget>
-    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
-    <TypeScriptModuleKind>ES6</TypeScriptModuleKind>
-    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
-    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
-    <TypeScriptOutFile></TypeScriptOutFile>
-    <TypeScriptOutDir />
-    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
-    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
-    <TypeScriptSourceMap>True</TypeScriptSourceMap>
-    <TypeScriptMapRoot />
-    <TypeScriptSourceRoot />
-  </PropertyGroup>
+	<ItemGroup>
+		<None Include="bundleconfig.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.9" />
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.4.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Reactive" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<TypeScriptCompile Include="tsconfig.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</TypeScriptCompile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="ResponsiveLayout\Collections\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="wwwroot\FluentSystemIcons-Regular.ttf">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties />
+		</VisualStudio>
+	</ProjectExtensions>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<TypeScriptTarget>ES2015</TypeScriptTarget>
+		<TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+		<TypeScriptModuleKind>ES6</TypeScriptModuleKind>
+		<TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+		<TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+		<TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+		<TypeScriptOutFile></TypeScriptOutFile>
+		<TypeScriptOutDir />
+		<TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+		<TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+		<TypeScriptSourceMap>True</TypeScriptSourceMap>
+		<TypeScriptMapRoot />
+		<TypeScriptSourceRoot />
+	</PropertyGroup>
 </Project>
