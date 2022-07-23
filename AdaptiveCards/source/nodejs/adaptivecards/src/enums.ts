@@ -26,3 +26,9 @@ export enum ImageSize {
   Medium,
   Large
 }
+
+export enum RefreshMode {
+  Disabled,
+  Manual,
+  Automatic
+}
