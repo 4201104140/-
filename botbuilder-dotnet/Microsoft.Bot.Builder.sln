@@ -5,11 +5,13 @@ VisualStudioVersion = 17.3.32714.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{7EFA9A4C-3CB4-447B-8034-2A9E48A94E42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Schema", "libraries\Microsoft.Bot.Schema\Microsoft.Bot.Schema.csproj", "{9DC908EA-08C2-41EE-AD91-83DD25C24C7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Schema", "libraries\Microsoft.Bot.Schema\Microsoft.Bot.Schema.csproj", "{9DC908EA-08C2-41EE-AD91-83DD25C24C7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Streaming", "libraries\Microsoft.Bot.Streaming\Microsoft.Bot.Streaming.csproj", "{61287078-EA21-4851-9D4A-66D74DBC86C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Streaming", "libraries\Microsoft.Bot.Streaming\Microsoft.Bot.Streaming.csproj", "{61287078-EA21-4851-9D4A-66D74DBC86C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Builder.TemplateManager", "libraries\Microsoft.Bot.Builder.TemplateManager\Microsoft.Bot.Builder.TemplateManager.csproj", "{5385814D-32F1-4FFF-8817-287A4A6B015A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Builder.TemplateManager", "libraries\Microsoft.Bot.Builder.TemplateManager\Microsoft.Bot.Builder.TemplateManager.csproj", "{5385814D-32F1-4FFF-8817-287A4A6B015A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Builder", "libraries\Microsoft.Bot.Builder\Microsoft.Bot.Builder.csproj", "{483C7829-91A2-423A-B0F7-6D9D950B4AF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{5385814D-32F1-4FFF-8817-287A4A6B015A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5385814D-32F1-4FFF-8817-287A4A6B015A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5385814D-32F1-4FFF-8817-287A4A6B015A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{483C7829-91A2-423A-B0F7-6D9D950B4AF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{483C7829-91A2-423A-B0F7-6D9D950B4AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{483C7829-91A2-423A-B0F7-6D9D950B4AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{483C7829-91A2-423A-B0F7-6D9D950B4AF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,6 +43,7 @@ Global
 		{9DC908EA-08C2-41EE-AD91-83DD25C24C7B} = {7EFA9A4C-3CB4-447B-8034-2A9E48A94E42}
 		{61287078-EA21-4851-9D4A-66D74DBC86C3} = {7EFA9A4C-3CB4-447B-8034-2A9E48A94E42}
 		{5385814D-32F1-4FFF-8817-287A4A6B015A} = {7EFA9A4C-3CB4-447B-8034-2A9E48A94E42}
+		{483C7829-91A2-423A-B0F7-6D9D950B4AF7} = {7EFA9A4C-3CB4-447B-8034-2A9E48A94E42}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53F9D199-E353-4E4D-B388-3760254CAD50}
