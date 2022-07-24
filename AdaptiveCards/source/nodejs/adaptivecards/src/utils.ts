@@ -5,6 +5,10 @@ export function parseString(obj: any, defaultValue?: string): string | undefined
   return typeof obj === "string" ? obj : defaultValue;
 }
 
+export function parseNumber(obj: any, defaultValue?: number): number | undefined {
+  return typeof obj === "number" ? obj : defaultValue;
+}
+
 export function parseBool(value: any, defaultValue?: boolean): boolean | undefined {
   if (typeof value === "boolean") {
     return value;

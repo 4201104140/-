@@ -1,6 +1,7 @@
-
+import { GlobalSettings, SizeAndUnit } from "./shared";
 import * as Utils from "./utils";
 import * as Enums from "./enums";
+import { Strings } from "./strings";
 
 export interface IValidationEvent {
   source?: SerializableObject;
@@ -296,6 +297,8 @@ export abstract class BaseSerializationContext {
   }
 }
 
+class SimpleSerializationContext extends BaseSerializationContext {}
+
 export class PropertyDefinition {
   private static _sequentialNumber: number = 0;
 
@@ -327,7 +330,7 @@ export class PropertyDefinition {
   constructor(
     readonly targetVersion: Version,
     readonly name: string,
-    readonly defaultValue: any,
+    readonly defaultValue?: any,
     readonly onGetInitialValue?: (sender: SerializableObject) => any
   ) {
     this.sequentialNumber = PropertyDefinition._sequentialNumber;
@@ -397,6 +400,84 @@ export class BoolProperty extends PropertyDefinition {
   }
 }
 
+export class NumProperty extends PropertyDefinition {
+  parse(
+    sender: SerializableObject,
+    source: PropertyBag,
+    context: BaseSerializationContext
+  ): number | undefined {
+    return Utils.parseNumber(source[this.name], this.defaultValue);
+  }
+
+  toJSON(
+    sender: SerializableObject,
+    target: PropertyBag,
+    value: number | undefined,
+    context: BaseSerializationContext
+  ) {
+    context.serializeNumber(target, this.name, value, this.defaultValue);
+  }
+
+  constructor(
+    readonly targetVersion: Version,
+    readonly name: string,
+    readonly defaultValue?: number,
+    readonly onGetInitialValue?: (sender: SerializableObject) => any
+  ) {
+    super(targetVersion, name, defaultValue, onGetInitialValue);
+  }
+}
+
+export class PixelSizeProperty extends PropertyDefinition {
+  parse(
+    sender: SerializableObject,
+    source: PropertyBag,
+    context: BaseSerializationContext
+  ): number | undefined {
+    let result: number | undefined = undefined;
+    const value = source[this.name];
+
+    if (typeof value === "string") {
+      let isValid = false;
+
+      try {
+        const size = SizeAndUnit.parse(value, true);
+
+        if (size.unit === Enums.SizeUnit.Pixel) {
+          result = size.physicalSize;
+
+          isValid = true;
+        }
+      } catch {
+        // Do nothing. A parse error is emitted below
+      }
+
+      if (!isValid) {
+        context.logParseEvent(
+          sender,
+          Enums.ValidationEvent.InvalidPropertyValue,
+          Strings.errors.invalidPropertyValue(source[this.name], "minHeight")
+        );
+      }
+    }
+
+    return result;
+  }
+
+  toJSON(
+    sender: SerializableObject,
+    target: PropertyBag,
+    value: number | undefined,
+    context: BaseSerializationContext
+  ) {
+    context.serializeValue(
+      target,
+      this.name,
+      typeof value === "number" && !isNaN(value) ? value + "px" : undefined
+    );
+  }
+}
+
 export class SerializableObjectProperty extends PropertyDefinition {
   parse(
     sender: SerializableObject,
@@ -413,6 +494,99 @@ export class SerializableObjectProperty extends PropertyDefinition {
     result.parse(sourceValue, context);
 
     return result;
+  }
+}
+
+export interface IVersionedValue<TValue> {
+  value: TValue;
+  targetVersion?: Version;
+}
+
+export class StringArrayProperty extends PropertyDefinition {
+  parse(
+    sender: SerializableObject, 
+    source: PropertyBag, 
+    context: BaseSerializationContext
+  ): string[] | undefined {
+    const sourceValue = source[this.name];
+
+    if (sourceValue === undefined || !Array.isArray(sourceValue)) {
+      return this.defaultValue;
+    }
+
+    const result: string[] = [];
+
+    for (const value of sourceValue) {
+      if (typeof value === "string") {
+        result.push(value);
+      } else {
+        context.logParseEvent(
+          sender,
+          Enums.ValidationEvent.InvalidPropertyValue,
+          `Invalid array value "${JSON.stringify(
+            value
+          )}" of type "${typeof value}" ignored for "${this.name}".`
+        )
+      }
+    }
+
+    return result;
+  }
+
+  toJSON(
+    sender: SerializableObject, 
+    target: PropertyBag, 
+    value: any, 
+    context: BaseSerializationContext
+  ) {
+    context.serializeArray(target, this.name, value);   
+  }
+
+  constructor(
+    readonly targetVersion: Version,
+    readonly name: string,
+    readonly defaultValue?: string[],
+    readonly onGetInitialValue?: (sender: SerializableObject) => string[] | undefined
+  ) {
+    super(targetVersion, name, defaultValue, onGetInitialValue);
+  }
+}
+
+export class CustomProperty<T> extends PropertyDefinition {
+  parse(sender: SerializableObject, source: PropertyBag, context: BaseSerializationContext): T {
+    return this.onParse(sender, this, source, context);
+  }
+
+  toJSON(
+    sender: SerializableObject, 
+    target: PropertyBag, 
+    value: any, 
+    context: BaseSerializationContext
+  ) {
+    this.onToJSON(sender, this, target, value, context);    
+  }
+
+  constructor(
+    readonly targetVersion: Version,
+    readonly name: string,
+    readonly onParse: (
+      sender: SerializableObject,
+      property: PropertyDefinition,
+      source: PropertyBag,
+      context: BaseSerializationContext
+    ) => T,
+    readonly onToJSON: (
+      sender: SerializableObject,
+      property: PropertyDefinition,
+      target: PropertyBag,
+      value: T,
+      context: BaseSerializationContext
+    ) => void,
+    readonly defaultValue?: T,
+    readonly onGetInitialValue?: (sender: SerializableObject) => T
+  ) {
+    super(targetVersion, name, defaultValue, onGetInitialValue);
+
   }
 }
 
@@ -450,8 +624,18 @@ export class SerializableObjectSchema {
       }
     }
   }
+
+  getItemAt(index: number): PropertyDefinition {
+    return this._properties[index];
+  }
+
+  getCount(): number {
+    return this._properties.length;
+  }
 }
 
+// This is a decorator function, used to map SerializableObject descendant class members to
+// schema properties
 export function property(prop: PropertyDefinition) {
   return function (target: any, propertyKey: string) {
     const descriptor = Object.getOwnPropertyDescriptor(target, propertyKey) || {};
@@ -486,7 +670,7 @@ export abstract class SerializableObject {
   protected abstract getSchemaKey(): string;
 
   protected getDefaultSerializationContext(): BaseSerializationContext {
-    
+    return new SimpleSerializationContext();
   }
 
   protected populateSchema(schema: SerializableObjectSchema) {
@@ -527,6 +711,55 @@ export abstract class SerializableObject {
     }
   }
 
+  protected getValue(prop: PropertyDefinition): any {
+    return this._propertyBag.hasOwnProperty(prop.getInternalName())
+      ? this._propertyBag[prop.getInternalName()]
+      : prop.defaultValue;
+  }
+
+  protected setValue(prop: PropertyDefinition, value: any) {
+    if (value === undefined || value === null) {
+      delete this._propertyBag[prop.getInternalName()];
+    } else {
+      this._propertyBag[prop.getInternalName()] = value;
+    }
+  }
+
+  protected internalParse(source: PropertyBag, context: BaseSerializationContext) {
+    this._propertyBag = {};
+    this._rawProperties = GlobalSettings.enableFullJsonRoundTrip ? (source ? source : {}) : {};
+
+    if (source) {
+      const s = this.getSchema();
+
+      for (let i = 0; i < s.getCount(); i++) {
+        const prop = s.getItemAt(i);
+
+        if (prop.isSerializationEnabled) {
+          let propertyValue = prop.onGetInitialValue
+            ? prop.onGetInitialValue(this)
+            : undefined;
+
+          if (source.hasOwnProperty(prop.name)) {
+            if (prop.targetVersion.compareTo(context.targetVersion) <= 0) {
+              propertyValue = prop.parse(this, source, context);
+            } else {
+              context.logParseEvent(
+                this,
+                Enums.ValidationEvent.UnsupportedProperty,
+                Strings.errors.pro
+              )
+            }
+          }
+
+          this.setValue(prop, propertyValue);
+        }
+      }
+    } else {
+      this.resetDefaultValues();
+    }
+  }
+
   setCustomProperty(name: string, value: any) {
     const shouldDeleteProperty =
       (typeof value === "string" && !value) || value === undefined || value === null;
@@ -535,6 +768,16 @@ export abstract class SerializableObject {
       delete this._rawProperties[name];
     } else {
       this._rawProperties[name] = value;
+    }
+  }
+
+  resetDefaultValues() {
+    const s = this.getSchema();
+
+    for (let i = 0; i < s.getCount(); i++) {
+      const prop = s.getItemAt(i);
+
+      this.setValue(prop, prop.defaultValue);
     }
   }
 

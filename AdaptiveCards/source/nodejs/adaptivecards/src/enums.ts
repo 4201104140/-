@@ -27,6 +27,11 @@ export enum ImageSize {
   Large
 }
 
+export enum SizeUnit {
+  Weight,
+  Pixel
+}
+
 export enum Spacing {
   None,
   Small,
