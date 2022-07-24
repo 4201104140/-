@@ -27,6 +27,49 @@ export enum ImageSize {
   Large
 }
 
+export enum Spacing {
+  None,
+  Small,
+  Default,
+  Medium,
+  Large,
+  ExtraLarge,
+  Padding
+}
+
+export enum HorizontalAlignment {
+  Left,
+  Center,
+  Right
+}
+
+export enum ValidationPhase {
+  Parse,
+  ToJSON,
+  Validation
+}
+
+export enum ValidationEvent {
+  Hint,
+  ActionTypeNotAllowed,
+  CollectionCantBeEmpty,
+  Deprecated,
+  ElementTypeNotAllowed,
+  InteractivityNotAllowed,
+  InvalidPropertyValue,
+  MissingCardType,
+  PropertyCantBeNull,
+  TooManyActions,
+  UnknownActionType,
+  UnknownElementType,
+  UnsupportedCardVersion,
+  DuplicateId,
+  UnsupportedProperty,
+  RequiredInputsShouldHaveLabel,
+  RequiredInputsShouldHaveErrorMessage,
+  Other
+}
+
 export enum RefreshMode {
   Disabled,
   Manual,

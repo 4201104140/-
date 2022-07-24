@@ -2,6 +2,13 @@
 import * as Utils from "./utils";
 import * as Enums from "./enums";
 
+export interface IValidationEvent {
+  source?: SerializableObject;
+  phase: Enums.ValidationPhase;
+  event: Enums.ValidationEvent;
+  message: string;
+}
+
 export class Version {
   private _versionString: string;
   private _major: number;
@@ -119,6 +126,8 @@ export class Versions {
 }
 
 export abstract class BaseSerializationContext {
+  private _validationEvents: IValidationEvent[] = [];
+
   toJSONOriginalParam: any;
   targetVersion: Version;
 
@@ -128,8 +137,163 @@ export abstract class BaseSerializationContext {
 
   serializeValue(
     target: { [key: string]: any },
+    propertyName: string,
+    propertyValue: any,
+    defaultValue: any = undefined,
+    forceDeleteIfNullOrDefault: boolean = false
+  ) {
+    if (
+      propertyValue === null ||
+      propertyValue === undefined ||
+      propertyValue === defaultValue
+    ) {
+      if (!GlobalSettings.enableFullJsonRoundTrip || forceDeleteIfNullOrDefault) {
+        delete target[propertyName];
+      }
+    } else if (propertyValue === defaultValue) {
+      delete target[propertyName];
+    } else {
+      target[propertyName] = propertyValue;
+    }
+  }
 
-  )
+  serializeString(
+    target: { [key: string]: any },
+    propertyName: string,
+    propertyValue?: string,
+    defaultValue?: string
+  ) {
+    if (
+      propertyValue === null ||
+      propertyValue === undefined ||
+      propertyValue === defaultValue
+    ) {
+      delete target[propertyName];
+    } else {
+      target[propertyName] = propertyValue;
+    }
+  }
+
+  serializeBool(
+    target: { [key: string]: any },
+    propertyName: string,
+    propertyValue?: boolean,
+    defaultValue?: boolean
+  ) {
+    if (
+      propertyValue === null ||
+      propertyValue === undefined ||
+      propertyValue === defaultValue
+    ) {
+      delete target[propertyName];
+    } else {
+      target[propertyName] = propertyValue;
+    }
+  }
+
+  serializeNumber(
+    target: { [key: string]: any },
+    propertyName: string,
+    propertyValue?: number,
+    defaultValue?: number
+  ) {
+    if (
+      propertyValue === null ||
+      propertyValue === undefined ||
+      propertyValue === defaultValue ||
+      isNaN(propertyValue)
+    ) {
+      delete target[propertyName];
+    } else {
+      target[propertyName] = propertyValue;
+    }
+  }
+
+  serializeEnum(
+    enumType: { [s: number]: string },
+    target: { [key: string]: any },
+    propertyName: string,
+    propertyValue: number | undefined,
+    defaultValue: number | undefined = undefined
+  ) {
+    if (
+      propertyValue === null ||
+      propertyValue === undefined ||
+      propertyValue === defaultValue
+    ) {
+      delete target[propertyName];
+    } else {
+      target[propertyName] = enumType[propertyValue];
+    }
+  }
+
+  serializeArray(
+    target: { [key: string]: any },
+    propertyName: string,
+    propertyValue: any[] | undefined
+  ) {
+    const items = [];
+
+    if (propertyValue) {
+      for (const item of propertyValue) {
+        let serializedItem: any = undefined;
+
+        if (item instanceof SerializableObject) {
+          serializedItem = item.toJSON(this);
+        } else if (item.toJSON) {
+          serializedItem = item.toJSON();
+        } else {
+          serializedItem = item;
+        }
+
+        if (serializedItem !== undefined) {
+          items.push(serializedItem);
+        }
+      }
+    }
+
+    if (items.length === 0) {
+      if (target.hasOwnProperty(propertyName) && Array.isArray(target[propertyName])) {
+        delete target[propertyName];
+      }
+    } else {
+      this.serializeValue(target, propertyName, items);
+    }
+  }
+
+  clearEvents() {
+    this._validationEvents = [];
+  }
+
+  logEvent(
+    source: SerializableObject | undefined,
+    phase: Enums.ValidationPhase,
+    event: Enums.ValidationEvent,
+    message: string
+  ) {
+    this._validationEvents.push({
+      source: source,
+      phase: phase,
+      event: event,
+      message: message
+    });
+  }
+
+  logParseEvent(
+    source: SerializableObject | undefined,
+    event: Enums.ValidationEvent,
+    message: string
+  ) {
+    this.logEvent(source, Enums.ValidationPhase.Parse, event, message);
+  }
+
+  getEventAt(index: number): IValidationEvent {
+    return this._validationEvents[index];
+  }
+
+  get eventCount(): number {
+    return this._validationEvents.length;
+  }
 }
 
 export class PropertyDefinition {
@@ -145,6 +309,15 @@ export class PropertyDefinition {
     context: BaseSerializationContext
   ): any {
     return source[this.name];
+  }
+
+  toJSON(
+    sender: SerializableObject,
+    target: PropertyBag,
+    value: any,
+    context: BaseSerializationContext
+  ): void {
+    context.serializeValue(target, this.name, value, this.defaultValue);
   }
 
   readonly sequentialNumber: number;
@@ -193,6 +366,34 @@ export class StringProperty extends PropertyDefinition {
     context: BaseSerializationContext
   ) {
     
+  }
+}
+
+export class BoolProperty extends PropertyDefinition {
+  parse(
+    sender: SerializableObject,
+    source: PropertyBag,
+    context: BaseSerializationContext
+  ): boolean | undefined {
+    return Utils.parseBool(source[this.name], this.defaultValue);
+  }
+
+  toJSON(
+    sender: SerializableObject,
+    target: object,
+    value: boolean | undefined,
+    context: BaseSerializationContext
+  ) {
+    context.serializeBool(target, this.name, value, this.defaultValue);
+  }
+
+  constructor(
+    readonly targetVersion: Version,
+    readonly name: string,
+    readonly defaultValue?: boolean,
+    readonly onGetInitialValue?: (sender: SerializableObject) => any
+  ) {
+    super(targetVersion, name, defaultValue, onGetInitialValue);
   }
 }
 
@@ -271,6 +472,10 @@ export function property(prop: PropertyDefinition) {
 export type PropertyBag = { [propertyName: string]: any };
 
 export abstract class SerializableObject {
+  static onRegisterCustomProperties?: (
+    sender: SerializableObject,
+    schema: SerializableObjectSchema
+  ) => void;
   static defaultMaxVersion: Version = Versions.latest;
 
   private static readonly _schemaCache: { [typeName: string]: SerializableObjectSchema} = {};
@@ -282,5 +487,72 @@ export abstract class SerializableObject {
 
   protected getDefaultSerializationContext(): BaseSerializationContext {
     
+  }
+
+  protected populateSchema(schema: SerializableObjectSchema) {
+    const ctor = <any>this.constructor;
+    const properties: PropertyDefinition[] = [];
+
+    // eslint-disable-next-line guard-for-in
+    for (const propertyName in ctor) {
+      try {
+        const propertyValue = ctor[propertyName];
+
+        if (propertyValue instanceof PropertyDefinition) {
+          properties.push(propertyValue);
+        }
+      } catch {
+
+      }
+    }
+
+    if (properties.length > 0) {
+      const sortedProperties = properties.sort(
+        (p1: PropertyDefinition, p2: PropertyDefinition) => {
+          if (p1.sequentialNumber > p2.sequentialNumber) {
+            return 1;
+          } else if (p1.sequentialNumber < p2.sequentialNumber) {
+            return -1;
+          }
+
+          return 0;
+        }
+      );
+
+      schema.add(...sortedProperties);
+    }
+
+    if (SerializableObject.onRegisterCustomProperties) {
+      SerializableObject.onRegisterCustomProperties(this, schema);
+    }
+  }
+
+  setCustomProperty(name: string, value: any) {
+    const shouldDeleteProperty =
+      (typeof value === "string" && !value) || value === undefined || value === null;
+    
+    if (shouldDeleteProperty) {
+      delete this._rawProperties[name];
+    } else {
+      this._rawProperties[name] = value;
+    }
+  }
+
+  getCustomProperty(name: string) {
+    return this._rawProperties[name];
+  }
+
+  getSchema(): SerializableObjectSchema {
+    let schema: SerializableObjectSchema = SerializableObject._schemaCache[this.getSchemaKey()];
+
+    if (!schema) {
+      schema = new SerializableObjectSchema();
+
+      this.populateSchema(schema);
+
+      SerializableObject._schemaCache[this.getSchemaKey()] = schema;
+    }
+
+    return schema;
   }
 }

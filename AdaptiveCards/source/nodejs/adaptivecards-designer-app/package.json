@@ -1,0 +1,23 @@
+{
+	"name": "@microsoft/adaptivecards-designer-app",
+	"version": "0.6.0-alpha.0",
+	"description": "Adaptive Card designer app",
+	"author": "AdaptiveCards",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"build": "webpack",
+		"clean": "rimraf lib dist",
+		"watch": "webpack --watch",
+		"start": "webpack-dev-server --open",
+		"lint": "eslint src/*.ts",
+		"release": "npm run clean && webpack --mode=production"
+	},
+	"devDependencies": {
+		"file-loader": "^6.0.0",
+		"monaco-editor-webpack-plugin": "^5.0.0"
+	},
+	"dependencies": {
+		"monaco-editor": "^0.29.1"
+	}
+}
