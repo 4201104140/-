@@ -17,6 +17,12 @@ export type AppletsSettings = {
   onLogEvent?: (level: Enums.L)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class GlobalSettings {
+  static useAdvancedTextBlockTruncation: boolean = true;
+  static use
+}
+
 export interface ISeparationDefinition {
   spacing: number;
   lineThickness?: number;
