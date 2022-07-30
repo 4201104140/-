@@ -42,7 +42,11 @@ export class Version {
     }
 
     if (!result._isValid) {
-      
+      context.logParseEvent(
+        undefined,
+        Enums.ValidationEvent.InvalidPropertyValue,
+        Strings.errors.invalidVersionString(result._versionString)
+      );
     }
 
     return result;
@@ -72,6 +76,10 @@ export class Version {
   } 
 
     return 0;
+  }
+
+  get label(): string {
+    return this._label ? this._label : this.toString();
   }
 
   get major(): number {
@@ -123,6 +131,23 @@ export class Versions {
       }
     }
     return properties.sort((v1: Version, v2: Version) => v1.compareTo(v2));
+  }
+}
+
+export function isVersionLessOrEqual(
+  version: TargetVersion,
+  targetVersion: TargetVersion
+): boolean {
+  if (version instanceof Version) {
+    if (targetVersion instanceof Version) {
+      return targetVersion.compareTo(version) >= 0;
+    } else {
+      // Target version is *
+      return true;
+    }
+  } else {
+    // Version is *
+    return true;
   }
 }
 
@@ -368,7 +393,23 @@ export class StringProperty extends PropertyDefinition {
     value: string | undefined,
     context: BaseSerializationContext
   ) {
-    
+    context.serializeString(
+      target,
+      this.name,
+      value === "" && this.treatEmptyAsUndefined ? undefined : value,
+      this.defaultValue
+    );
+  }
+
+  constructor(
+    readonly targetVersion: Version,
+    readonly name: string,
+    readonly treatEmptyAsUndefined: boolean = true,
+    readonly regEx?: RegExp,
+    readonly defaultValue?: string,
+    readonly onGetInitialValue?: (sender: SerializableObject) => string
+  ) {
+    super(targetVersion, name, defaultValue, onGetInitialValue);
   }
 }
 
@@ -478,25 +519,6 @@ export class PixelSizeProperty extends PropertyDefinition {
   }
 }
 
-export class SerializableObjectProperty extends PropertyDefinition {
-  parse(
-    sender: SerializableObject,
-    source: PropertyBag,
-    context: BaseSerializationContext
-  ): SerializableObject | undefined {
-    const sourceValue = source[this.name];
-
-    if (sourceValue === undefined) {
-      return this.onGetInitialValue ? this.onGetInitialValue(sender) : this.defaultValue;
-    }
-
-    const result = new this.objectType();
-    result.parse(sourceValue, context);
-
-    return result;
-  }
-}
-
 export interface IVersionedValue<TValue> {
   value: TValue;
   targetVersion?: Version;
@@ -549,6 +571,196 @@ export class StringArrayProperty extends PropertyDefinition {
     readonly onGetInitialValue?: (sender: SerializableObject) => string[] | undefined
   ) {
     super(targetVersion, name, defaultValue, onGetInitialValue);
+  }
+}
+
+export class ValueSetProperty extends PropertyDefinition {
+  constructor(
+    readonly targetVersion: Version,
+    readonly name: string,
+    readonly values: IVersionedValue<string>[],
+    readonly defaultValue?: string,
+    readonly onGetInitialValue?: (sender: SerializableObject) => string
+  ) {
+    super(targetVersion, name, defaultValue, onGetInitialValue);
+  }
+}
+
+export class EnumProperty<TEnum extends { [s: number]: string }> extends PropertyDefinition {
+  private _values: IVersionedValue<number>[] = [];
+
+  parse(
+    sender: SerializableObject,
+    source: PropertyBag,
+    context: BaseSerializationContext
+  ): number | undefined {
+    const sourceValue = source[this.name];
+
+    if (typeof sourceValue !== "string") {
+      return this.defaultValue;
+    }
+
+    const enumValue = Utils.getEnumValueByName(this.enumType, sourceValue);
+
+    if (enumValue !== undefined) {
+      for (const versionedValue of this.values) {
+        if (versionedValue.value === enumValue) {
+          const targetVersion = versionedValue.targetVersion
+            ? versionedValue.targetVersion
+            : this.targetVersion;
+
+          if (targetVersion.compareTo(context.targetVersion) <= 0) {
+            return enumValue;
+          } else {
+            context.logParseEvent(
+              sender,
+              Enums.ValidationEvent.InvalidPropertyValue,
+              Strings.errors.propertyValueNotSupported(
+                sourceValue,
+                this.name,
+                targetVersion.toString(),
+                context.targetVersion.toString()
+              )
+            );
+
+            return this.defaultValue;
+          }
+        }
+      }
+    }
+
+    context.logParseEvent(
+      sender,
+      Enums.ValidationEvent.InvalidPropertyValue,
+      Strings.errors.invalidPropertyValue(sourceValue, this.name)
+
+    );
+
+    return this.defaultValue;
+  }
+
+  toJSON(
+    sender: SerializableObject, 
+    target: PropertyBag, 
+    value: any, 
+    context: BaseSerializationContext
+  ) {
+    let invalidValue = false;
+    
+    if (value !== undefined) {
+      invalidValue = true;
+
+      for (const versionedValue of this.values) {
+        if (versionedValue.value === value) {
+          const targetVersion = versionedValue.targetVersion
+            ? versionedValue.targetVersion
+            : this.targetVersion;
+          
+          if (targetVersion.compareTo(context.targetVersion) <= 0) {
+            invalidValue = false;
+
+            break;
+          } else {
+            context.logEvent(
+              sender,
+              Enums.ValidationPhase.ToJSON,
+              Enums.ValidationEvent.InvalidPropertyValue,
+              Strings.errors.invalidPropertyValue(value, this.name)
+            );
+          }
+        }
+      }
+    }
+  }
+
+  constructor(
+    readonly targetVersion: Version,
+    readonly name: string,
+    readonly enumType: TEnum,
+    readonly defaultValue?: number,
+    values?: IVersionedValue<number>[],
+    readonly onGetInitialValue?: (sender: SerializableObject) => number
+  ) {
+    super(targetVersion, name, defaultValue, onGetInitialValue);
+
+
+  }
+}
+
+export type SerializableObjectType = { new (): SerializableObject };
+
+export class SerializableObjectProperty extends PropertyDefinition {
+  parse(
+    sender: SerializableObject,
+    source: PropertyBag,
+    context: BaseSerializationContext
+  ): SerializableObject | undefined {
+    const sourceValue = source[this.name];
+
+    if (sourceValue === undefined) {
+      return this.onGetInitialValue ? this.onGetInitialValue(sender) : this.defaultValue;
+    }
+
+    const result = new this.objectType();
+    result.parse(sourceValue, context);
+
+    return result;
+  }
+}
+
+export interface IVersionedValue<TValue> {
+  value: TValue;
+  targetVersion?: Version;
+}
+
+export class SerializableObjectCollectionProperty extends PropertyDefinition {
+  parse(
+    sender: SerializableObject, 
+    source: PropertyBag, 
+    context: BaseSerializationContext
+  ): SerializableObject[] | undefined {
+    const result: SerializableObject[] | undefined = [];
+
+    const sourceCollection = source[this.name];
+
+    if (Array.isArray(sourceCollection)) {
+      for (const sourceItem of sourceCollection) {
+        const item = new this.objectType();
+        item.parse(sourceItem, context);
+
+        result.push(item);
+
+        if (this.onItemAdded) {
+          this.onItemAdded(sender, item);
+        }
+      }
+    }
+
+    return result.length > 0
+      ? result
+      : this.onGetInitialValue
+      ? this.onGetInitialValue(sender)
+      : undefined;
+  }
+
+  toJSON(
+    sender: SerializableObject, 
+    target: PropertyBag, 
+    value: any, 
+    context: BaseSerializationContext
+  ) {
+    context.serializeArray(target, this.name, value);   
+  }
+
+  constructor(
+    readonly targetVersion: Version,
+    readonly name: string,
+    readonly objectType: SerializableObjectType,
+    readonly onItemAdded?: (sender: SerializableObject, item: SerializableObject) => void
+  ) {
+    super(targetVersion, name, undefined, (sender: SerializableObject) => {
+      return [];
+    });
   }
 }
 

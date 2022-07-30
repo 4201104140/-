@@ -32,6 +32,14 @@ export enum SizeUnit {
   Pixel
 }
 
+export enum TextSize {
+  Small,
+  Default,
+  Medium,
+  Large,
+  ExtraLarge
+}
+
 export enum Spacing {
   None,
   Small,
@@ -46,6 +54,11 @@ export enum HorizontalAlignment {
   Left,
   Center,
   Right
+}
+
+export enum Orientation {
+  Horizontal,
+  Vertical
 }
 
 export enum ValidationPhase {

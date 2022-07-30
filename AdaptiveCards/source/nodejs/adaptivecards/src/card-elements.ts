@@ -1,3 +1,7 @@
+import {
+  HostConfig
+} from "./host-config";
+
 import { CardObject } from './card-object';
 import * as Enums from './enums';
 import {
@@ -5,8 +9,17 @@ import {
 } from './shared';
 
 import {
+  Version,
   Versions,
+  property,
   StringProperty,
+  BoolProperty,
+  ValueSetProperty,
+  EnumProperty,
+  PropertyDefinition,
+  SerializableObject,
+  BaseSerializationContext,
+  PropertyBag,
 } from "./serialization";
 
 export function renderSeparation(
@@ -18,7 +31,34 @@ export function renderSeparation(
     separationDefinition.spacing > 0 ||
     (separationDefinition.lineThickness && separationDefinition.lineThickness > 0)
   ) {
-    
+    const separator = document.createElement("div");
+    separator.className = hostConfig.makeCssClassName(
+      "ac-" +
+        (orientation === Enums.Orientation.Horizontal ? "horizontal" : "vertical") +
+        "-separator"
+    );
+    separator.setAttribute("aria-hidden", "true");
+
+    const color = separationDefinition.lineColor
+      ? Utils.stringToCssColor(separationDefinition.lineColor)
+      : "";
+
+    if (orientation === Enums.Orientation.Horizontal) {
+      if (separationDefinition.lineThickness) {
+        separator.style.paddingTop = separationDefinition.spacing / 2 + "px";
+        separator.style.marginBottom = separationDefinition.spacing /2 + "px";
+        separator.style.borderBottom =
+          separationDefinition.lineThickness + "px solid " + color; 
+      } else {
+        separator.style.height = separationDefinition.spacing + "px";
+      }
+    } else {
+
+    }
+
+    return separator;
+  } else {
+    return undefined;
   }
 }
 
@@ -41,7 +81,7 @@ export abstract class CardElement extends CardObject {
     [{ value: "auto "}, { value: "stretch" }],
     "auto"
   );
-  static readonly horizontalAlignmentProperty = new EmumProperty(
+  static readonly horizontalAlignmentProperty = new EnumProperty(
     Versions.v1_0,
     "horizontalAlignment",
     Enums.HorizontalAlignment
@@ -57,8 +97,123 @@ export abstract class CardElement extends CardObject {
   //#endregion
 }
 
-export abstract class Action
+export class ActionProperty extends PropertyDefinition {
+  parse(
+    sender: SerializableObject, 
+    source: PropertyBag, 
+    context: BaseSerializationContext
+  ): Action | undefined {
+    const parent = <CardElement>sender;
 
-export abstract class SubmitActionBase extends
+    return context.parseAction(
+      parent,
+      source[this.name],
+      this.forbiddenActionTypes,
+      parent.isDeignMode()
+    );
+  }
 
-export class ExecuteAction extends 
+  toJSON(
+    sender: SerializableObject, 
+    target: PropertyBag, 
+    value: any, 
+    context: BaseSerializationContext
+  ) {
+    context.serializeValue(
+      target,
+      this.name,
+      value ? value.toJSON(context) : undefined,
+      undefined,
+      true
+    );
+  }
+
+  constructor(
+    readonly targetVersion: Version,
+    readonly name: string,
+    readonly forbiddenActionTypes: string[] = []
+  ) {
+    super(targetVersion, name, undefined);
+  }
+}
+
+export abstract class BaseTextBlock extends CardElement {
+  //#region Schema
+
+  static readonly textProperty = new StringProperty(Versions.v1_0, "text", true);
+  static readonly sizeProperty = new EnumProperty(Versions.v1_0, "size", Enums.TextSize);
+  static readonly weightProperty = new EnumProperty(Versions.v1_0, "weight", Enums.TextWeight);
+  static readonly colorProperty = new EnumProperty(Versions.v1_0, "color", Enums.TextColor);
+  static readonly isSubtleProperty = new BoolProperty(Versions.v1_0, "isSubtle");
+  static readonly fontTypeProperty = new EnumProperty(Versions.v1_2, "fontType", Enums.FontType);
+  static readonly selectActionProperty = new ActionProperty(Versions.v1_1, "selectAction", [
+    "Action.ShowCard"
+  ]);
+
+
+  //#endregion
+}
+
+export type TextBlockStyle = "default" | "heading" | "columnHeader";
+
+export class TextBlock extends BaseTextBlock {
+
+}
+
+export class TextRun extends BaseTextBlock {
+
+}
+
+export class RichTextBlock extends CardElement {
+
+}
+
+export class Fact extends SerializableObject {
+
+}
+
+export class FactSet extends CardElement {
+
+}
+
+class ImageDimensionProperty extends PropertyDefinition {
+
+}
+
+export class Image extends CardElement {
+
+}
+
+export abstract class CardElementContainer extends CardElement {
+
+}
+
+export class ImageSet extends CardElementContainer {
+
+}
+
+
+
+export abstract class Action {
+
+}
+
+export abstract class SubmitActionBase extends Action {
+  
+}
+
+export class ExecuteAction extends SubmitActionBase {
+  // Note the "weird" way this field is declared is to work around a breaking
+  // change introduced is TS 3.1 wrt d.ts generation. DO NOT CHANGE
+  static readonly JsonTypeName: "Action.Execute" = "Action.Execute";
+
+  //#region  Schema
+
+  static readonly verbProperty = new StringProperty(Versions.v1_4, "verb");
+
+  @property(ExecuteAction.verbProperty)
+  verb: string;
+  //#endregion
+}
+
+

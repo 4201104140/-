@@ -1,7 +1,9 @@
 import {
   TargetVersion,
+  Version,
   SerializableObject,
-  BaseSerializationContext
+  BaseSerializationContext,
+  PropertyBag
 } from "./serialization";
 
 export class HostCapabilities extends SerializableObject {
@@ -21,10 +23,20 @@ export class HostCapabilities extends SerializableObject {
 
         if (typeof jsonVersion === "string") {
           if (jsonVersion === "*") {
-            this.add
+            this.addCapability(name, "*");
+          } else {
+            const version = Version.parse(jsonVersion, context);
+
+            if (version?.isValid) {
+              this.addCapability(name, version);
+            }
           }
         }
       }
     }
+  }
+
+  addCapability(name: string, version: TargetVersion) {
+    this._capabilities[name] = version;
   }
 }

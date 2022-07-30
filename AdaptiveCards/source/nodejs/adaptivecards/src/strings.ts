@@ -8,5 +8,7 @@ export class Strings {
       `Element type "${typeName}" is not allowed in this context.`,
     invalidPropertyValue: (value: any, propertyName: string) =>
       `Invalid value "${value}" for property "${propertyName}".`,
+    invalidVersionString: (versionString: string) =>
+      `Invalid version string "${versionString}".`,
   }
 }

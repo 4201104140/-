@@ -25,3 +25,23 @@ export function parseBool(value: any, defaultValue?: boolean): boolean | undefin
 
   return defaultValue;
 }
+
+export function getEnumValueByName(
+  enumType: { [s: number]: string },
+  name: string
+): number | undefined {
+  // eslint-disable-next-line guard-for-in
+  for (const key in enumType) {
+    const keyAsNumber = parseInt(key, 10);
+
+    if (keyAsNumber >= 0) {
+      const value = enumType[key];
+
+      if (value && typeof value === "string" && value.toLowerCase() === name.toLowerCase()) {
+        return keyAsNumber;
+      }
+    }
+  }
+
+  return undefined;
+}

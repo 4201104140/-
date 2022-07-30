@@ -1,0 +1,21 @@
+{
+	"name": "adaptivecards-designer",
+	"version": "2.4.0-alpha.0",
+	"description": "Adaptive Card designer embeddable control",
+	"main": "lib/adaptivecards-designer.js",
+	"types": "lib/adaptivecards-designer.d.ts",
+	"files": [
+		"lib",
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"clean": "rimraf"
+	},
+	"dependencies": {
+		"clipboard": "^2.0.1"
+	},
+	"peerDependencies": {
+
+	}
+}

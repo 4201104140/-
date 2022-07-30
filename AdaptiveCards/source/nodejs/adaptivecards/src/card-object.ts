@@ -5,8 +5,10 @@ import {
   Versions,
   SerializableObject,
   StringProperty,
-  IValidationEvent
+  IValidationEvent,
+  SerializableObjectProperty
 } from "./serialization";
+import { HostCapabilities } from "./host-capabilities";
 
 export class ValidationResults {
   readonly allIds: Dictionary<number> = {};
@@ -36,5 +38,13 @@ export abstract class CardObject extends SerializableObject {
     }
   );
   static readonly idProperty = new StringProperty(Versions.v1_0, "id");
-  static readonly requiresProperty = new SerializableObject
+  static readonly requiresProperty = new SerializableObjectProperty(
+    Versions.v1_2,
+    "requires",
+    HostCapabilities,
+    false,
+    new HostCapabilities()
+  );
+
+
 }
