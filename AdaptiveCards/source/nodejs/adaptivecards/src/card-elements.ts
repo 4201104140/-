@@ -1,5 +1,12 @@
 import {
-  HostConfig
+  HostConfig,
+  defaultHostConfig,
+  BaseTextDefinition,
+  FontTypeDefinition,
+  ColorSetDefinition,
+  TextColorDefinition,
+  ContainerStyleDefinition,
+  TextStyleDefinition
 } from "./host-config";
 
 import { CardObject } from './card-object';
@@ -20,6 +27,8 @@ import {
   SerializableObject,
   BaseSerializationContext,
   PropertyBag,
+  SerializableObjectCollectionProperty,
+  SerializableObjectSchema,
 } from "./serialization";
 
 export function renderSeparation(
@@ -150,14 +159,111 @@ export abstract class BaseTextBlock extends CardElement {
     "Action.ShowCard"
   ]);
 
+  protected populateSchema(schema: SerializableObjectSchema) {
+      super.populateSchema(schema);
+
+      schema.remove(BaseTextBlock.selectActionProperty);
+  }
 
   //#endregion
+
+  size?: Enums.TextSize;
+
+  weight?: Enums.TextWeight;
+
+  color?: Enums.TextColor;
+
+  fontType?: Enums.FontType;
+
+  isSubtle?: boolean;
+
+  get text(): string | undefined {
+    return this.getValue(BaseTextBlock.textProperty);
+  }
+
+  protected getFontSize(fontType: FontTypeDefinition): number {
+    switch (this.effectiveSize) {
+      case Enums.TextSize.Small:
+        return fontType.fontSizes.small;
+      case Enums.TextSize.Medium:
+        return fontType.fontSizes.medium;
+      case Enums.TextSize.Large:
+        return fontType.fontSizes.large;
+      case Enums.TextSize.ExtraLarge:
+        return fontType.fontSizes.extraLarge;
+      default:
+        return fontType.fontSizes.default;
+    }
+  }
+
+  protected getColorDefinition(
+    colorSet: ColorSetDefinition,
+    color: Enums.TextColor
+  ): TextColorDefinition {
+    switch (color) {
+      case Enums.TextColor.Accent:
+        return colorSet.accent;
+      case Enums.TextColor.Dark:
+        return colorSet.dark;
+      case Enums.TextColor.Light:
+        return colorSet.light;
+      case Enums.TextColor.Good:
+        return colorSet.good;
+      case Enums.TextColor.Warning:
+        return colorSet.warning;
+      case Enums.TextColor.Attention:
+        return colorSet.attention;
+      default:
+        return colorSet.default;
+    }
+  }
+
+  protected setText(value: string | undefined) {
+    this.setValue(BaseTextBlock.textProperty, value);
+  }
+
+  ariaHidden: boolean = false;
+
+  constructor(text?: string) {
+    super();
+
+    if (text) {
+      this.text = text;
+    }
+  }
+
+  init(textDefinition: BaseTextDefinition) {
+    this.size = textDefinition.size;
+    this.weight = textDefinition.weight;
+    this.color = textDefinition.color;
+    this.isSubtle = textDefinition.isSubtle;
+  }
+
+  asString(): string | undefined {
+    return this.text;
+  }
+
+  applyStylesTo(targetElement: HTMLElement) {
+    const fontType = this.hostConfig.getFontTypeDefinition(this.effectiveFontType);
+
+
+  }
+
+  get effectiveSize(): Enums.TextSize {
+    return this.size !== undefined ? this.size : this.getEffectiveTextStyleDefinition().size;
+  }
+
+  get effectiveWeight(): Enums.TextWeight {
+    return this.weight !== undefined
+        ? this.weight
+        : this.getEffectiveTextStyleDefinition().weight;
+  }
 }
 
 export type TextBlockStyle = "default" | "heading" | "columnHeader";
 
 export class TextBlock extends BaseTextBlock {
-
+  
 }
 
 export class TextRun extends BaseTextBlock {
@@ -216,4 +322,77 @@ export class ExecuteAction extends SubmitActionBase {
   //#endregion
 }
 
+export class AuthCardButton extends SerializableObject {
+  //#region Schema
 
+  static readonly typeProperty = new StringProperty(Versions.v1_4, "type");
+  static readonly titleProperty = new StringProperty(Versions.v1_4, "title");
+  static readonly imageProperty = new StringProperty(Versions.v1_4, "image");
+  static readonly valueProperty = new StringProperty(Versions.v1_4, "value");
+
+  protected getSchemaKey(): string {
+    return "AuthCardButton";
+  }
+
+  //#endregion
+
+  type: string;
+
+  title?: string;
+
+  image?: string;
+
+  value?: string;
+}
+
+export class TokenExchangeResource extends SerializableObject {
+  // #region Schema
+
+  static readonly idProperty = new StringProperty(Versions.v1_4, "id");
+  static readonly uriProperty = new StringProperty(Versions.v1_4, "uri");
+  static readonly providerIdProperty = new StringProperty(Versions.v1_4, "providerId");
+
+  protected getSchemaKey(): string {
+      return "TokenExchangeResource";
+  }
+
+  //#endregion
+
+  id?: string;
+
+  uri?: string;
+
+  providerId?: string;
+}
+
+export class Authentication extends SerializableObject {
+  //#region Schema
+
+  static readonly textProperty = new StringProperty(Versions.v1_4, "text")
+  static readonly connectionNameProperty = new StringProperty(Versions.v1_4, "connectionName");
+  static readonly buttonsProperty = new SerializableObjectCollectionProperty(
+    Versions.v1_4,
+    "buttons",
+    AuthCardButton
+  );
+  static readonly tokenExchangeResourceProperty = new SerializableObjectProperty(
+    Versions.v1_4,
+    "tokenExchangeResource",
+    TokenExchangeResource,
+    true
+  );
+
+  protected getSchemaKey(): string {
+      return "Authentication";
+  }
+
+  //#endregion
+
+  text?: string;
+
+  connectionName?: string;
+
+  buttons: AuthCardButton[];
+
+  tokenExchangeResource?: TokenExchangeResource;
+}

@@ -40,6 +40,17 @@ export enum TextSize {
   ExtraLarge
 }
 
+export enum TextWeight {
+  Lighter,
+  Default,
+  Bolder
+}
+
+export enum FontType {
+  Default,
+  Monospace
+}
+
 export enum Spacing {
   None,
   Small,
@@ -48,6 +59,16 @@ export enum Spacing {
   Large,
   ExtraLarge,
   Padding
+}
+
+export enum TextColor {
+  Default,
+  Dark,
+  Light,
+  Accent,
+  Good,
+  Warning,
+  Attention
 }
 
 export enum HorizontalAlignment {

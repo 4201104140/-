@@ -10,5 +10,18 @@ export class Strings {
       `Invalid value "${value}" for property "${propertyName}".`,
     invalidVersionString: (versionString: string) =>
       `Invalid version string "${versionString}".`,
+    propertyValueNotSupported: (
+      value: any,
+      propertyName: string,
+      supportedInVersion: string,
+      versionUsed: string
+    ) =>
+      `Value "${value}" for property "${propertyName}" is supported in version "${supportedInVersion}, but you are using version ${versionUsed}."`,
+    propertyNotSupported: (
+      propertyName: string,
+      supportedInVersion: string,
+      versionUsed: string
+    ) =>
+      `Property "${propertyName}" is supported in version ${supportedInVersion}, but you are using version ${versionUsed}.`,
   }
 }
