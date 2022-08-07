@@ -8,14 +8,14 @@ export type Refresh = {
 
 export type AppletsSettings = {
   logEnabled: boolean;
-  logLevel: boolean;
+  logLevel: Enums.LogLevel;
   maximumRetryAttempts: number;
   defaultTimeBetweenRetryAttempts: number;
   authPromptWidth: number;
   authPromptHeight: number;
   readonly refresh: Refresh;
-  onLogEvent?: (level: Enums.L)
-}
+  onLogEvent?: (level: Enums.LogLevel, message?: any, ...optionalParams: any[]) => void;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class GlobalSettings {
@@ -25,6 +25,7 @@ export class GlobalSettings {
   static allowMarkForTextHighlighting: boolean = false;
   static alwaysBleedSeparators: boolean = false;
   static enableFullJsonRoundTrip: boolean = false;
+  static allowPreProcessingPropertyValues: boolean = false;
 }
 
 export interface ISeparationDefinition {

@@ -23,7 +23,27 @@ module.exports = (env, args) => {
       extensions: [".ts", ".tsx", ".js"]
     },
     module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          loader: "ts-loader",
+          exclude: /(node_modules|__tests__)/
+        },
+        {
+          test: /\.tff$/,
+          loader: "file-loader"
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader'
+          ]
+        }
+      ]
+    },
+    plugins: [
       
-    }
+    ]
   }
 }

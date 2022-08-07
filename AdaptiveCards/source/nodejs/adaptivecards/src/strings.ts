@@ -23,5 +23,6 @@ export class Strings {
       versionUsed: string
     ) =>
       `Property "${propertyName}" is supported in version ${supportedInVersion}, but you are using version ${versionUsed}.`,
+    duplicateId: (id: string) => `Duplicate Id "${id}".`,
   }
 }

@@ -1,19 +1,19 @@
-import {
-  HostConfig,
-  defaultHostConfig,
-  BaseTextDefinition,
-  FontTypeDefinition,
-  ColorSetDefinition,
-  TextColorDefinition,
-  ContainerStyleDefinition,
-  TextStyleDefinition
-} from "./host-config";
+// import {
+//   HostConfig,
+//   defaultHostConfig,
+//   BaseTextDefinition,
+//   FontTypeDefinition,
+//   ColorSetDefinition,
+//   TextColorDefinition,
+//   ContainerStyleDefinition,
+//   TextStyleDefinition
+// } from "./host-config";
 
 import { CardObject } from './card-object';
 import * as Enums from './enums';
-import {
-  ISeparationDefinition,
-} from './shared';
+// import {
+//   ISeparationDefinition,
+// } from './shared';
 
 import {
   Version,
@@ -31,47 +31,47 @@ import {
   SerializableObjectSchema,
 } from "./serialization";
 
-export function renderSeparation(
-  hostConfig: HostConfig,
-  separationDefinition: ISeparationDefinition,
-  orientation: Enums.Orientation
-): HTMLElement | undefined {
-  if (
-    separationDefinition.spacing > 0 ||
-    (separationDefinition.lineThickness && separationDefinition.lineThickness > 0)
-  ) {
-    const separator = document.createElement("div");
-    separator.className = hostConfig.makeCssClassName(
-      "ac-" +
-        (orientation === Enums.Orientation.Horizontal ? "horizontal" : "vertical") +
-        "-separator"
-    );
-    separator.setAttribute("aria-hidden", "true");
+// export function renderSeparation(
+//   hostConfig: HostConfig,
+//   separationDefinition: ISeparationDefinition,
+//   orientation: Enums.Orientation
+// ): HTMLElement | undefined {
+//   if (
+//     separationDefinition.spacing > 0 ||
+//     (separationDefinition.lineThickness && separationDefinition.lineThickness > 0)
+//   ) {
+//     const separator = document.createElement("div");
+//     separator.className = hostConfig.makeCssClassName(
+//       "ac-" +
+//         (orientation === Enums.Orientation.Horizontal ? "horizontal" : "vertical") +
+//         "-separator"
+//     );
+//     separator.setAttribute("aria-hidden", "true");
 
-    const color = separationDefinition.lineColor
-      ? Utils.stringToCssColor(separationDefinition.lineColor)
-      : "";
+//     const color = separationDefinition.lineColor
+//       ? Utils.stringToCssColor(separationDefinition.lineColor)
+//       : "";
 
-    if (orientation === Enums.Orientation.Horizontal) {
-      if (separationDefinition.lineThickness) {
-        separator.style.paddingTop = separationDefinition.spacing / 2 + "px";
-        separator.style.marginBottom = separationDefinition.spacing /2 + "px";
-        separator.style.borderBottom =
-          separationDefinition.lineThickness + "px solid " + color; 
-      } else {
-        separator.style.height = separationDefinition.spacing + "px";
-      }
-    } else {
+//     if (orientation === Enums.Orientation.Horizontal) {
+//       if (separationDefinition.lineThickness) {
+//         separator.style.paddingTop = separationDefinition.spacing / 2 + "px";
+//         separator.style.marginBottom = separationDefinition.spacing /2 + "px";
+//         separator.style.borderBottom =
+//           separationDefinition.lineThickness + "px solid " + color; 
+//       } else {
+//         separator.style.height = separationDefinition.spacing + "px";
+//       }
+//     } else {
 
-    }
+//     }
 
-    return separator;
-  } else {
-    return undefined;
-  }
-}
+//     return separator;
+//   } else {
+//     return undefined;
+//   }
+// }
 
-export type CardElementHeight = "auto" | "stretch";
+// export type CardElementHeight = "auto" | "stretch";
 
 export abstract class CardElement extends CardObject {
   //#region Schema
@@ -106,293 +106,297 @@ export abstract class CardElement extends CardObject {
   //#endregion
 }
 
-export class ActionProperty extends PropertyDefinition {
-  parse(
-    sender: SerializableObject, 
-    source: PropertyBag, 
-    context: BaseSerializationContext
-  ): Action | undefined {
-    const parent = <CardElement>sender;
+// export class ActionProperty extends PropertyDefinition {
+//   parse(
+//     sender: SerializableObject, 
+//     source: PropertyBag, 
+//     context: BaseSerializationContext
+//   ): Action | undefined {
+//     const parent = <CardElement>sender;
 
-    return context.parseAction(
-      parent,
-      source[this.name],
-      this.forbiddenActionTypes,
-      parent.isDeignMode()
-    );
-  }
+//     return context.parseAction(
+//       parent,
+//       source[this.name],
+//       this.forbiddenActionTypes,
+//       parent.isDeignMode()
+//     );
+//   }
 
-  toJSON(
-    sender: SerializableObject, 
-    target: PropertyBag, 
-    value: any, 
-    context: BaseSerializationContext
-  ) {
-    context.serializeValue(
-      target,
-      this.name,
-      value ? value.toJSON(context) : undefined,
-      undefined,
-      true
-    );
-  }
+//   toJSON(
+//     sender: SerializableObject, 
+//     target: PropertyBag, 
+//     value: any, 
+//     context: BaseSerializationContext
+//   ) {
+//     context.serializeValue(
+//       target,
+//       this.name,
+//       value ? value.toJSON(context) : undefined,
+//       undefined,
+//       true
+//     );
+//   }
 
-  constructor(
-    readonly targetVersion: Version,
-    readonly name: string,
-    readonly forbiddenActionTypes: string[] = []
-  ) {
-    super(targetVersion, name, undefined);
-  }
-}
+//   constructor(
+//     readonly targetVersion: Version,
+//     readonly name: string,
+//     readonly forbiddenActionTypes: string[] = []
+//   ) {
+//     super(targetVersion, name, undefined);
+//   }
+// }
 
-export abstract class BaseTextBlock extends CardElement {
-  //#region Schema
+// export abstract class BaseTextBlock extends CardElement {
+//   //#region Schema
 
-  static readonly textProperty = new StringProperty(Versions.v1_0, "text", true);
-  static readonly sizeProperty = new EnumProperty(Versions.v1_0, "size", Enums.TextSize);
-  static readonly weightProperty = new EnumProperty(Versions.v1_0, "weight", Enums.TextWeight);
-  static readonly colorProperty = new EnumProperty(Versions.v1_0, "color", Enums.TextColor);
-  static readonly isSubtleProperty = new BoolProperty(Versions.v1_0, "isSubtle");
-  static readonly fontTypeProperty = new EnumProperty(Versions.v1_2, "fontType", Enums.FontType);
-  static readonly selectActionProperty = new ActionProperty(Versions.v1_1, "selectAction", [
-    "Action.ShowCard"
-  ]);
+//   static readonly textProperty = new StringProperty(Versions.v1_0, "text", true);
+//   static readonly sizeProperty = new EnumProperty(Versions.v1_0, "size", Enums.TextSize);
+//   static readonly weightProperty = new EnumProperty(Versions.v1_0, "weight", Enums.TextWeight);
+//   static readonly colorProperty = new EnumProperty(Versions.v1_0, "color", Enums.TextColor);
+//   static readonly isSubtleProperty = new BoolProperty(Versions.v1_0, "isSubtle");
+//   static readonly fontTypeProperty = new EnumProperty(Versions.v1_2, "fontType", Enums.FontType);
+//   static readonly selectActionProperty = new ActionProperty(Versions.v1_1, "selectAction", [
+//     "Action.ShowCard"
+//   ]);
 
-  protected populateSchema(schema: SerializableObjectSchema) {
-      super.populateSchema(schema);
+//   protected populateSchema(schema: SerializableObjectSchema) {
+//       super.populateSchema(schema);
 
-      schema.remove(BaseTextBlock.selectActionProperty);
-  }
+//       schema.remove(BaseTextBlock.selectActionProperty);
+//   }
 
-  //#endregion
+//   //#endregion
 
-  size?: Enums.TextSize;
+//   size?: Enums.TextSize;
 
-  weight?: Enums.TextWeight;
+//   weight?: Enums.TextWeight;
 
-  color?: Enums.TextColor;
+//   color?: Enums.TextColor;
 
-  fontType?: Enums.FontType;
+//   fontType?: Enums.FontType;
 
-  isSubtle?: boolean;
+//   isSubtle?: boolean;
 
-  get text(): string | undefined {
-    return this.getValue(BaseTextBlock.textProperty);
-  }
+//   get text(): string | undefined {
+//     return this.getValue(BaseTextBlock.textProperty);
+//   }
 
-  protected getFontSize(fontType: FontTypeDefinition): number {
-    switch (this.effectiveSize) {
-      case Enums.TextSize.Small:
-        return fontType.fontSizes.small;
-      case Enums.TextSize.Medium:
-        return fontType.fontSizes.medium;
-      case Enums.TextSize.Large:
-        return fontType.fontSizes.large;
-      case Enums.TextSize.ExtraLarge:
-        return fontType.fontSizes.extraLarge;
-      default:
-        return fontType.fontSizes.default;
-    }
-  }
+//   protected getFontSize(fontType: FontTypeDefinition): number {
+//     switch (this.effectiveSize) {
+//       case Enums.TextSize.Small:
+//         return fontType.fontSizes.small;
+//       case Enums.TextSize.Medium:
+//         return fontType.fontSizes.medium;
+//       case Enums.TextSize.Large:
+//         return fontType.fontSizes.large;
+//       case Enums.TextSize.ExtraLarge:
+//         return fontType.fontSizes.extraLarge;
+//       default:
+//         return fontType.fontSizes.default;
+//     }
+//   }
 
-  protected getColorDefinition(
-    colorSet: ColorSetDefinition,
-    color: Enums.TextColor
-  ): TextColorDefinition {
-    switch (color) {
-      case Enums.TextColor.Accent:
-        return colorSet.accent;
-      case Enums.TextColor.Dark:
-        return colorSet.dark;
-      case Enums.TextColor.Light:
-        return colorSet.light;
-      case Enums.TextColor.Good:
-        return colorSet.good;
-      case Enums.TextColor.Warning:
-        return colorSet.warning;
-      case Enums.TextColor.Attention:
-        return colorSet.attention;
-      default:
-        return colorSet.default;
-    }
-  }
+//   protected getColorDefinition(
+//     colorSet: ColorSetDefinition,
+//     color: Enums.TextColor
+//   ): TextColorDefinition {
+//     switch (color) {
+//       case Enums.TextColor.Accent:
+//         return colorSet.accent;
+//       case Enums.TextColor.Dark:
+//         return colorSet.dark;
+//       case Enums.TextColor.Light:
+//         return colorSet.light;
+//       case Enums.TextColor.Good:
+//         return colorSet.good;
+//       case Enums.TextColor.Warning:
+//         return colorSet.warning;
+//       case Enums.TextColor.Attention:
+//         return colorSet.attention;
+//       default:
+//         return colorSet.default;
+//     }
+//   }
 
-  protected setText(value: string | undefined) {
-    this.setValue(BaseTextBlock.textProperty, value);
-  }
+//   protected setText(value: string | undefined) {
+//     this.setValue(BaseTextBlock.textProperty, value);
+//   }
 
-  ariaHidden: boolean = false;
+//   ariaHidden: boolean = false;
 
-  constructor(text?: string) {
-    super();
+//   constructor(text?: string) {
+//     super();
 
-    if (text) {
-      this.text = text;
-    }
-  }
+//     if (text) {
+//       this.text = text;
+//     }
+//   }
 
-  init(textDefinition: BaseTextDefinition) {
-    this.size = textDefinition.size;
-    this.weight = textDefinition.weight;
-    this.color = textDefinition.color;
-    this.isSubtle = textDefinition.isSubtle;
-  }
+//   init(textDefinition: BaseTextDefinition) {
+//     this.size = textDefinition.size;
+//     this.weight = textDefinition.weight;
+//     this.color = textDefinition.color;
+//     this.isSubtle = textDefinition.isSubtle;
+//   }
 
-  asString(): string | undefined {
-    return this.text;
-  }
+//   asString(): string | undefined {
+//     return this.text;
+//   }
 
-  applyStylesTo(targetElement: HTMLElement) {
-    const fontType = this.hostConfig.getFontTypeDefinition(this.effectiveFontType);
+//   applyStylesTo(targetElement: HTMLElement) {
+//     const fontType = this.hostConfig.getFontTypeDefinition(this.effectiveFontType);
 
 
-  }
+//   }
 
-  get effectiveSize(): Enums.TextSize {
-    return this.size !== undefined ? this.size : this.getEffectiveTextStyleDefinition().size;
-  }
+//   get effectiveSize(): Enums.TextSize {
+//     return this.size !== undefined ? this.size : this.getEffectiveTextStyleDefinition().size;
+//   }
 
-  get effectiveWeight(): Enums.TextWeight {
-    return this.weight !== undefined
-        ? this.weight
-        : this.getEffectiveTextStyleDefinition().weight;
-  }
-}
+//   get effectiveWeight(): Enums.TextWeight {
+//     return this.weight !== undefined
+//         ? this.weight
+//         : this.getEffectiveTextStyleDefinition().weight;
+//   }
+// }
 
-export type TextBlockStyle = "default" | "heading" | "columnHeader";
+// export type TextBlockStyle = "default" | "heading" | "columnHeader";
 
-export class TextBlock extends BaseTextBlock {
+// export class TextBlock extends BaseTextBlock {
   
-}
+// }
 
-export class TextRun extends BaseTextBlock {
+// export class TextRun extends BaseTextBlock {
 
-}
+// }
 
-export class RichTextBlock extends CardElement {
+// export class RichTextBlock extends CardElement {
 
-}
+// }
 
-export class Fact extends SerializableObject {
+// export class Fact extends SerializableObject {
 
-}
+// }
 
-export class FactSet extends CardElement {
+// export class FactSet extends CardElement {
 
-}
+// }
 
-class ImageDimensionProperty extends PropertyDefinition {
+// class ImageDimensionProperty extends PropertyDefinition {
 
-}
+// }
 
-export class Image extends CardElement {
+// export class Image extends CardElement {
 
-}
+// }
 
-export abstract class CardElementContainer extends CardElement {
+// export abstract class CardElementContainer extends CardElement {
 
-}
+// }
 
-export class ImageSet extends CardElementContainer {
+// export class ImageSet extends CardElementContainer {
 
-}
+// }
 
 
 
-export abstract class Action {
+// export abstract class Action {
 
-}
+// }
 
-export abstract class SubmitActionBase extends Action {
+// export abstract class SubmitActionBase extends Action {
   
-}
+// }
 
-export class ExecuteAction extends SubmitActionBase {
-  // Note the "weird" way this field is declared is to work around a breaking
-  // change introduced is TS 3.1 wrt d.ts generation. DO NOT CHANGE
-  static readonly JsonTypeName: "Action.Execute" = "Action.Execute";
+// export class ExecuteAction extends SubmitActionBase {
+//   // Note the "weird" way this field is declared is to work around a breaking
+//   // change introduced is TS 3.1 wrt d.ts generation. DO NOT CHANGE
+//   static readonly JsonTypeName: "Action.Execute" = "Action.Execute";
 
-  //#region  Schema
+//   //#region  Schema
 
-  static readonly verbProperty = new StringProperty(Versions.v1_4, "verb");
+//   static readonly verbProperty = new StringProperty(Versions.v1_4, "verb");
 
-  @property(ExecuteAction.verbProperty)
-  verb: string;
-  //#endregion
-}
+//   @property(ExecuteAction.verbProperty)
+//   verb: string;
+//   //#endregion
+// }
 
-export class AuthCardButton extends SerializableObject {
-  //#region Schema
+// export class AuthCardButton extends SerializableObject {
+//   //#region Schema
 
-  static readonly typeProperty = new StringProperty(Versions.v1_4, "type");
-  static readonly titleProperty = new StringProperty(Versions.v1_4, "title");
-  static readonly imageProperty = new StringProperty(Versions.v1_4, "image");
-  static readonly valueProperty = new StringProperty(Versions.v1_4, "value");
+//   static readonly typeProperty = new StringProperty(Versions.v1_4, "type");
+//   static readonly titleProperty = new StringProperty(Versions.v1_4, "title");
+//   static readonly imageProperty = new StringProperty(Versions.v1_4, "image");
+//   static readonly valueProperty = new StringProperty(Versions.v1_4, "value");
 
-  protected getSchemaKey(): string {
-    return "AuthCardButton";
-  }
+//   protected getSchemaKey(): string {
+//     return "AuthCardButton";
+//   }
 
-  //#endregion
+//   //#endregion
 
-  type: string;
+//   type: string;
 
-  title?: string;
+//   title?: string;
 
-  image?: string;
+//   image?: string;
 
-  value?: string;
-}
+//   value?: string;
+// }
 
-export class TokenExchangeResource extends SerializableObject {
-  // #region Schema
+// export class TokenExchangeResource extends SerializableObject {
+//   // #region Schema
 
-  static readonly idProperty = new StringProperty(Versions.v1_4, "id");
-  static readonly uriProperty = new StringProperty(Versions.v1_4, "uri");
-  static readonly providerIdProperty = new StringProperty(Versions.v1_4, "providerId");
+//   static readonly idProperty = new StringProperty(Versions.v1_4, "id");
+//   static readonly uriProperty = new StringProperty(Versions.v1_4, "uri");
+//   static readonly providerIdProperty = new StringProperty(Versions.v1_4, "providerId");
 
-  protected getSchemaKey(): string {
-      return "TokenExchangeResource";
-  }
+//   protected getSchemaKey(): string {
+//       return "TokenExchangeResource";
+//   }
 
-  //#endregion
+//   //#endregion
 
-  id?: string;
+//   id?: string;
 
-  uri?: string;
+//   uri?: string;
 
-  providerId?: string;
-}
+//   providerId?: string;
+// }
 
-export class Authentication extends SerializableObject {
-  //#region Schema
+// export class Authentication extends SerializableObject {
+//   //#region Schema
 
-  static readonly textProperty = new StringProperty(Versions.v1_4, "text")
-  static readonly connectionNameProperty = new StringProperty(Versions.v1_4, "connectionName");
-  static readonly buttonsProperty = new SerializableObjectCollectionProperty(
-    Versions.v1_4,
-    "buttons",
-    AuthCardButton
-  );
-  static readonly tokenExchangeResourceProperty = new SerializableObjectProperty(
-    Versions.v1_4,
-    "tokenExchangeResource",
-    TokenExchangeResource,
-    true
-  );
+//   static readonly textProperty = new StringProperty(Versions.v1_4, "text")
+//   static readonly connectionNameProperty = new StringProperty(Versions.v1_4, "connectionName");
+//   static readonly buttonsProperty = new SerializableObjectCollectionProperty(
+//     Versions.v1_4,
+//     "buttons",
+//     AuthCardButton
+//   );
+//   static readonly tokenExchangeResourceProperty = new SerializableObjectProperty(
+//     Versions.v1_4,
+//     "tokenExchangeResource",
+//     TokenExchangeResource,
+//     true
+//   );
 
-  protected getSchemaKey(): string {
-      return "Authentication";
-  }
+//   protected getSchemaKey(): string {
+//       return "Authentication";
+//   }
 
-  //#endregion
+//   //#endregion
 
-  text?: string;
+//   text?: string;
 
-  connectionName?: string;
+//   connectionName?: string;
 
-  buttons: AuthCardButton[];
+//   buttons: AuthCardButton[];
 
-  tokenExchangeResource?: TokenExchangeResource;
-}
+//   tokenExchangeResource?: TokenExchangeResource;
+// }
+
+// export class SerializationContext extends BaseSerializationContext {
+//   private _elemey
+// }

@@ -45,3 +45,17 @@ export function getEnumValueByName(
 
   return undefined;
 }
+
+export function parseEnum(
+  enumType: { [s: number]: string },
+  name: string,
+  defaultValue?: number
+): number | undefined {
+  if (!name) {
+    return defaultValue;
+  }
+
+  const enumValue = getEnumValueByName(enumType, name);
+
+  return enumValue !== undefined ? enumValue : defaultValue;
+}

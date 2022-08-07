@@ -21,7 +21,7 @@ export interface IOpenUrlAction extends IAction {
 
 export interface IShowCardAction extends IAction {
   type: "Action.ShowCard";
-  card: 
+  //card: 
 }
 
 export interface ICardElement {

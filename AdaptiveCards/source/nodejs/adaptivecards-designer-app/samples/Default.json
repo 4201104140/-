@@ -1,0 +1,17 @@
+{
+	"type": "AdaptiveCard",
+	"body": [
+		{
+			"type": "TextBlock",
+			"size": "medium",
+			"weight": "bolder",
+			"text": "Publish Adaptive Card schema"
+		},
+		{
+			"type": "ColumnSet",
+			"columns": [
+
+			]
+		}
+	]
+}

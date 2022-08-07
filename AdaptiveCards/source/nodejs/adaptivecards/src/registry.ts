@@ -1,4 +1,4 @@
-import { Action, CardElement } from "./card-elements";
+import { CardElement } from "./card-elements";
 import { SerializableObject, Version, Versions } from "./serialization";
 
 /**
@@ -89,41 +89,41 @@ export class CardObjectRegistry<T extends SerializableObject> {
 
 export class GlobalRegistry {
   private static _elements?: CardObjectRegistry<CardElement>;
-  private static _actions?: CardObjectRegistry<Action>;
+  //private static _actions?: CardObjectRegistry<Action>;
 
   static populateWithDefaultElements(registry: CardObjectRegistry<CardElement>) {
     registry.clear();
 
-    GlobalRegistry.defaultElements.copyTo(registry);
+    //GlobalRegistry.defaultElements.copyTo(registry);
   }
 
-  static populateWithDefaultActions(registry: CardObjectRegistry<Action>) {
-    registry.clear;
-    GlobalRegistry.defaultActions.copyTo(registry);
-  }
+  // static populateWithDefaultActions(registry: CardObjectRegistry<Action>) {
+  //   registry.clear;
+  //   GlobalRegistry.defaultActions.copyTo(registry);
+  // }
 
-  static readonly defaultElements = new CardObjectRegistry<CardElement>();
-  static readonly defaultActions = new CardObjectRegistry<Action>();
-  static get elements(): CardObjectRegistry<CardElement> {
-    if (!GlobalRegistry._elements) {
-      GlobalRegistry._elements = new CardObjectRegistry<CardElement>();
-      GlobalRegistry.populateWithDefaultElements(this._elements)
-    }
+  // static readonly defaultElements = new CardObjectRegistry<CardElement>();
+  // static readonly defaultActions = new CardObjectRegistry<Action>();
+  // static get elements(): CardObjectRegistry<CardElement> {
+  //   if (!GlobalRegistry._elements) {
+  //     GlobalRegistry._elements = new CardObjectRegistry<CardElement>();
+  //     GlobalRegistry.populateWithDefaultElements(this._elements)
+  //   }
 
-    return GlobalRegistry._elements;
-  }
+  //   return GlobalRegistry._elements;
+  // }
 
-  static get actions(): CardObjectRegistry<Action> {
-    if (GlobalRegistry._actions) {
-      GlobalRegistry._actions = new CardObjectRegistry<Action>();
-      GlobalRegistry.populateWithDefaultElements(this._actions);
-    }
+  // static get actions(): CardObjectRegistry<Action> {
+  //   if (GlobalRegistry._actions) {
+  //     GlobalRegistry._actions = new CardObjectRegistry<Action>();
+  //     GlobalRegistry.populateWithDefaultElements(this._actions);
+  //   }
 
-    return GlobalRegistry._actions;
-  }
+  //   return GlobalRegistry._actions;
+  // }
 
-  static reset() {
-    GlobalRegistry._elements = undefined;
-    GlobalRegistry._actions = undefined;
-  }
+  // static reset() {
+  //   GlobalRegistry._elements = undefined;
+  //   GlobalRegistry._actions = undefined;
+  // }
 }

@@ -1,9 +1,84 @@
+import * as Utils from "./utils";
 import { HostCapabilities } from "./host-capabilities";
 
-export class HostConfig {
-  readonly hostCapabilities = new HostCapabilities();
+function parseHostConfigEnum(
+  targetEnum: { [s: number]: string },
+  value: string | number,
+  defaultValue: number
+): number {
+  if (typeof value === "string") {
+    const parsedValue = Utils.parseEnum(targetEnum, value, defaultValue);
 
-  
+    return parsedValue !== undefined ? parsedValue : defaultValue;
+  } else if (typeof value === "number") {
+    return value;
+  } else {
+    return defaultValue;
+  }
+}
+
+export class ColorDefinition {
+  default: string = "#000000";
+  subtle: string = "#666666";
+
+  constructor(defaultColor?: string, subtleColor?: string) {
+    if (defaultColor) {
+      this.default = defaultColor;
+    }
+
+    if (subtleColor) {
+      this.subtle = subtleColor;
+    }
+  }
+
+  parse(obj?: any) {
+    if (obj) {
+      this.default = obj["default"] || this.default;
+      this.subtle = obj["subtle"] || this.subtle;
+    }
+  }
+}
+
+export class TextColorDefinition extends ColorDefinition {
+  readonly highlightColors = new ColorDefinition("#22000000", "#11000000");
+
+  parse(obj?: any) {
+    super.parse(obj);
+
+    if (obj) {
+      this.highlightColors.parse(obj["highlightColors"]);
+    }
+  }
+}
+
+export class AdaptiveCardConfig {
+  allowCustomStyle: boolean = false;
+
+  constructor(obj?: any) {
+    if (obj) {
+      this.allowCustomStyle = obj["allowCustomStyle"] || this.allowCustomStyle;
+    }
+  }
+}
+
+
+
+export class ContainerStyleDefinition {
+  backgroundColor?: string;
+
+  //readonly foregroundColors: 
+}
+
+export interface ILineHeightDefinitions {
+  small: number;
+  medium: number;
+  default: number;
+  large: number;
+  extraLarge: number;
+}
+
+export class ContainerStyleSet {
+  //private _allStyles: { [key: string]: C}
 }
 
 export interface IFontSizeDefinitions {
@@ -60,4 +135,14 @@ export class FontTypeDefinition {
       bolder: (obj.fontWeights && obj.fontWeights["bolder"]) || this.fontWeights.bolder
     };
   }
+}
+
+export class HostConfig {
+  readonly hostCapabilities = new HostCapabilities();
+
+  private _legacyFontType: FontTypeDefinition;
+
+  choiceSetInputValueSeparator: string = ",";
+  supportsInteractivity: boolean = true;
+  //lineHeights?: ILine
 }

@@ -114,3 +114,9 @@ export enum RefreshMode {
   Manual,
   Automatic
 }
+
+export enum LogLevel {
+  Info,
+  Warning,
+  Error
+}
