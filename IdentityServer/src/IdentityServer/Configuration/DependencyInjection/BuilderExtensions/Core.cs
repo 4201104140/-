@@ -83,4 +83,41 @@ public static class IdentityServerBuilderExtensionsCore
 
         return builder;
     }
+
+    public static IIdentityServerBuilder AddPluggableServices(this IIdentityServerBuilder builder)
+    {
+        return builder;
+    }
+
+    public static IIdentityServerBuilder AddKeyManagement(this IIdentityServerBuilder builder)
+    {
+        return builder;
+    }
+
+    public static IIdentityServerBuilder AddDynamicProvidersCore(this IIdentityServerBuilder builder)
+    {
+        return builder;
+    }
+
+    public static IIdentityServerBuilder AddValidators(this IIdentityServerBuilder builder)
+    {
+        return builder;
+    }
+
+    public static IIdentityServerBuilder AddResponseGenerators(this IIdentityServerBuilder builder)
+    {
+        return builder;
+    }
+
+    public static IIdentityServerBuilder AddDefaultSecretParsers(this IIdentityServerBuilder builder)
+    {
+        return builder;
+    }
+
+    public static IIdentityServerBuilder AddDefaultSecretValidators(this IIdentityServerBuilder builder)
+    {
+        return builder;
+    }
+
+
 }
