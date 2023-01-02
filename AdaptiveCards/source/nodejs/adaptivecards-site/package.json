@@ -1,0 +1,42 @@
+{
+	"name": "@microsoft/adaptivecards-site",
+	"version": "0.8.0-alpha.0",
+	"private": true,
+	"scripts": {
+		"clean": "hexo clean",
+		"build": "hexo generate && npm run generate-sw",
+		"release-deps": "npx lerna run --scope @microsoft/adaptivecards-site --include-dependencies release --stream",
+		"generate-md-ac": "node node_modules/marked-schema/bin/marked-schema ../../../schemas/adaptive-card.json ./schema-explorer-toc.yml -r AdaptiveCard",
+		"generate-md-hc": "node node_modules/marked-schema/bin/marked-schema ../../../schemas/host-config.json ./schema-hostconfig-toc.yml -r AdaptiveCardConfig",
+		"release": "hexo clean && hexo generate && npm run generate-sw",
+		"start": "hexo server",
+		"generate-sw": "npx workbox-cli injectManifest workbox-config.json"
+	},
+	"hexo": {
+		"version": "6.2.0"
+	},
+	"devDependencies": {
+		"@fortawesome/fontawesome-free": "6.1.2",
+		"glob": "^8.0.3",
+		"hexo": "^6.2.0",
+		"hexo-all-minifier": "^0.5.7",
+		"hexo-browsersync": "^0.3.0",
+		"hexo-cli": "^4.3.0",
+		"hexo-featured-image": "^0.4.3",
+		"hexo-fs": "^3.1.0",
+		"hexo-generator-archive": "^1.0.0",
+		"hexo-generator-category": "^1.0.0",
+		"hexo-generator-feed": "^3.0.0",
+		"hexo-generator-index": "^2.0.0",
+		"hexo-generator-tag": "^1.0.0",
+		"hexo-reading-time": "^1.0.3",
+		"hexo-renderer-ejs": "^2.0.0",
+		"hexo-renderer-marked": "^5.0.0",
+		"hexo-renderer-stylus": "^2.1.0",
+		"hexo-server": "^3.0.0",
+		"request": "^2.88.2",
+		"request-promise": "4.2.6",
+		"workbox-cli": "6.5.4",
+		"yaml-front-matter": "4.1.1"
+	}
+}
