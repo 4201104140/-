@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IdentityServer.Hosting;
 
-internal class EndpointRouter
+internal class EndpointRouter : IEndpointRouter
 {
     private readonly IEnumerable<Endpoint> _endpoints;
     private readonly IdentityServerOptions _options;

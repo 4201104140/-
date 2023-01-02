@@ -29,6 +29,27 @@ public static class IdentityServerServiceCollectionExtensions
         return builder;
     }
 
+    public static IIdentityServerBuilder AddIdentityServer(this IServiceCollection services)
+    {
+        var builder = services.AddIdentityServerBuilder();
+
+        builder
+            .AddRequiredPlatformServices()
+            .AddCookieAuthentication()
+            .AddCoreServices()
+            .AddDefaultEndpoints()
+            .AddPluggableServices()
+            .AddKeyManagement()
+            .AddDynamicProvidersCore()
+            .AddOidcDynamicProvider()
+            .AddValidators()
+            .AddResponseGenerators()
+            .AddDefaultSecretParsers()
+            .AddDefaultSecretValidators();
+
+        return builder;
+    }
+
     /// <summary>
     /// Adds IdentityServer.
     /// </summary>

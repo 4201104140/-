@@ -2,6 +2,15 @@
 
 public static class IdentityServerConstants
 {
+    public const string DefaultCookieAuthenticationScheme = "idsrv";
+    public const string ExternalCookieAuthenticationScheme = "idsrv.external";
+    public const string DefaultCheckSessionCookieName = "idsrv.session";
+
+    public static class ClaimValueTypes
+    {
+        public const string Json = "json";
+    }
+
     public static class StandardScopes
     {
         /// <summary>REQUIRED. Informs the Authorization Server that the Client is making an OpenID Connect request. If the <c>openid</c> scope value is not present, the behavior is entirely unspecified.</summary>

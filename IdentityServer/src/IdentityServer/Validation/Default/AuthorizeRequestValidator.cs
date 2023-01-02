@@ -1,27 +1,27 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using Microsoft.Extensions.Logging;
+//using System;
+//using System.Collections.Generic;
+//using System.Collections.Specialized;
+//using System.Linq;
+//using System.Security.Claims;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace IdentityServer.Validation;
+//namespace IdentityServer.Validation;
 
-internal class AuthorizeRequestValidator : IAuthorizeRequestValidator
-{
-    private readonly ILogger _logger;
+//internal class AuthorizeRequestValidator : IAuthorizeRequestValidator
+//{
+//    private readonly ILogger _logger;
 
-    public Task<AuthorizeRequestValidationResult> ValidateAsync(NameValueCollection parameters, ClaimsPrincipal subject = null)
-    {
-        using var activity = Tracing.BasicActivitySource.StartActivity("AuthorizeRequestValidator.Validate");
+//    public Task<AuthorizeRequestValidationResult> ValidateAsync(NameValueCollection parameters, ClaimsPrincipal subject = null)
+//    {
+//        using var activity = Tracing.BasicActivitySource.StartActivity("AuthorizeRequestValidator.Validate");
 
-        _logger.LogDebug("Start authorize request protocol validation");
+//        _logger.LogDebug("Start authorize request protocol validation");
 
-        var request = new ValidatedAuthorizeRequest
-        {
+//        var request = new ValidatedAuthorizeRequest
+//        {
 
-        }
-    }
-}
+//        }
+//    }
+//}

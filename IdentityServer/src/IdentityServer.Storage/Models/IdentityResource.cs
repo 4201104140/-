@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using IdentityServer.Extensions;
+using System.Diagnostics;
 
 namespace IdentityServer.Models;
 
